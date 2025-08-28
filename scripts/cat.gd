@@ -1,0 +1,48 @@
+extends StaticBody2D
+
+@onready var sprite = $AnimatedSprite2D
+@onready var timer = $Timer
+@onready var happy: TextureRect = $happy
+@onready var angry: TextureRect = $angry
+@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+@onready var surprised: TextureRect = $surprised
+
+var cutting: AudioStreamPlayer2D = null
+var type = Enums.OrderType.HAPPY
+
+func carve():
+	sprite.play("carving")
+	timer.start(5)
+	cutting.play()
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	sprite.play("idle")
+	cutting = $cutting
+	var meta_type =  get_meta("Type")
+	print("metadata: ", meta_type)
+	if meta_type == "happy":
+		type = Enums.OrderType.HAPPY
+		happy.visible = true
+	if meta_type == "angry":
+		type = Enums.OrderType.ANGRY
+		angry.visible = true
+		animated_sprite_2d.modulate = Color(1, 0, 0, 1)
+	if meta_type == "surprised":
+		type = Enums.OrderType.SURPRISED
+		surprised.visible = true
+		animated_sprite_2d.modulate = Color(0, 1, 0, 1)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	pass
+	
+func _on_timer_timeout() -> void:
+	sprite.play("idle")
+	cutting.stop()
+	timer.stop()
+	var jack_scene = preload("res://scenes/jack.tscn")
+	var jack_scene_instance = jack_scene.instantiate()
+	jack_scene_instance.global_position = Vector2(global_position.x - 15, global_position.y - 5)
+	get_parent().add_child(jack_scene_instance, true)
+	jack_scene_instance.setType(type)

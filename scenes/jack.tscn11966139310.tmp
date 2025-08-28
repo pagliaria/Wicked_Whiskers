@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwo2shj4qu5v8"]
+
+[ext_resource type="Texture2D" uid="uid://blb8odocb5per" path="res://assets/sprites/jack.png" id="1_wef06"]
+[ext_resource type="Script" uid="uid://bodu6u7sjdpyv" path="res://scripts/jack.gd" id="1_wn71h"]
+[ext_resource type="Script" uid="uid://dp6omst0k3lxv" path="res://scripts/jack_area.gd" id="2_d0iqa"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d0iqa"]
+radius = 7.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wef06"]
+
+[node name="jack" type="RigidBody2D"]
+script = ExtResource("1_wn71h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_d0iqa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -1)
+scale = Vector2(0.138393, 0.138393)
+texture = ExtResource("1_wef06")
+
+[node name="jack_area" type="Area2D" parent="."]
+script = ExtResource("2_d0iqa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="jack_area"]
+shape = SubResource("CircleShape2D_wef06")

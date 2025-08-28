@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://ca8nqlya2x4ip"]
+
+[ext_resource type="Texture2D" uid="uid://c36kxseacwb13" path="res://assets/sprites/bubble.png" id="1_h6bfi"]
+[ext_resource type="Script" uid="uid://bqp7xibxddq6r" path="res://scenes/order_bubble.gd" id="2_38oim"]
+[ext_resource type="Texture2D" uid="uid://blb8odocb5per" path="res://assets/sprites/pumpkins/happy.png" id="2_ijd0h"]
+[ext_resource type="Texture2D" uid="uid://c2xuik3mcjjrv" path="res://assets/sprites/pumpkins/angry.png" id="3_ijd0h"]
+[ext_resource type="Texture2D" uid="uid://dfgd3k0qj8mht" path="res://assets/sprites/pumpkins/surprised.png" id="5_ij660"]
+
+[node name="order_bubble" type="Sprite2D"]
+position = Vector2(0, 2)
+scale = Vector2(0.0546297, 0.0546297)
+texture = ExtResource("1_h6bfi")
+script = ExtResource("2_38oim")
+
+[node name="happy" type="TextureRect" parent="."]
+visible = false
+offset_left = -128.135
+offset_top = -201.356
+offset_right = 129.865
+offset_bottom = 65.6442
+texture = ExtResource("2_ijd0h")
+expand_mode = 1
+
+[node name="angry" type="TextureRect" parent="."]
+visible = false
+offset_left = -128.135
+offset_top = -201.356
+offset_right = 129.865
+offset_bottom = 65.6442
+texture = ExtResource("3_ijd0h")
+expand_mode = 1
+
+[node name="surprised" type="TextureRect" parent="."]
+visible = false
+offset_left = -128.135
+offset_top = -201.356
+offset_right = 129.865
+offset_bottom = 65.6442
+texture = ExtResource("5_ij660")
+expand_mode = 1

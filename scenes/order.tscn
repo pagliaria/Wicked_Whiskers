@@ -1,0 +1,141 @@
+[gd_scene load_steps=10 format=3 uid="uid://30qc81oxrfv3"]
+
+[ext_resource type="Script" uid="uid://bs2526osu8yht" path="res://scripts/order_display.gd" id="1_2k6rg"]
+[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_somo4"]
+[ext_resource type="Texture2D" uid="uid://blb8odocb5per" path="res://assets/sprites/pumpkins/happy.png" id="2_2k6rg"]
+[ext_resource type="Texture2D" uid="uid://bpik15hp2cfs2" path="res://assets/sprites/ghost.png" id="3_somo4"]
+[ext_resource type="Texture2D" uid="uid://c2xuik3mcjjrv" path="res://assets/sprites/pumpkins/angry.png" id="4_wsyb0"]
+[ext_resource type="Texture2D" uid="uid://dfgd3k0qj8mht" path="res://assets/sprites/pumpkins/surprised.png" id="5_wy35d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_somo4"]
+bg_color = Color(0.366595, 0.366595, 0.366594, 1)
+border_width_left = 4
+border_width_right = 4
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2k6rg"]
+bg_color = Color(0.180141, 0.721221, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wsyb0"]
+bg_color = Color(0.977949, 0.230255, 0.769886, 1)
+
+[node name="order_display" type="Control"]
+custom_minimum_size = Vector2(115, 80)
+layout_mode = 3
+anchor_right = 0.066
+anchor_bottom = 0.048
+offset_left = -1.0
+offset_right = -16.72
+offset_bottom = 25.16
+script = ExtResource("1_2k6rg")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.861
+anchor_bottom = 0.89
+offset_right = -8.81801
+offset_bottom = -18.2
+theme_override_styles/panel = SubResource("StyleBoxFlat_somo4")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 4.0
+offset_right = -32.0
+offset_bottom = -38.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_somo4")
+theme_override_font_sizes/font_size = 10
+text = "Order #"
+horizontal_alignment = 1
+
+[node name="item_number" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 4.0
+offset_right = 93.0
+offset_bottom = 15.0
+theme_override_fonts/font = ExtResource("1_somo4")
+theme_override_font_sizes/font_size = 10
+text = "?"
+
+[node name="happy" type="TextureRect" parent="Panel"]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 58.0
+offset_top = 17.0
+offset_right = -22.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_2k6rg")
+expand_mode = 1
+
+[node name="angry" type="TextureRect" parent="Panel"]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 58.0
+offset_top = 17.0
+offset_right = -22.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_wsyb0")
+expand_mode = 1
+
+[node name="surprised" type="TextureRect" parent="Panel"]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 58.0
+offset_top = 17.0
+offset_right = -22.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_wy35d")
+expand_mode = 1
+
+[node name="TextureRect2" type="Sprite2D" parent="Panel"]
+position = Vector2(34, 34)
+scale = Vector2(0.675781, 0.675781)
+texture = ExtResource("3_somo4")
+region_enabled = true
+region_rect = Rect2(76.4729, 2.24098, 34.3519, 55.1327)
+
+[node name="ProgressBar" type="ProgressBar" parent="Panel"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 21.0
+offset_right = -19.0
+offset_bottom = 3.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_2k6rg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_wsyb0")
+rounded = true
+fill_mode = 1
+show_percentage = false

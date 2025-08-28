@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://by2ickff22ej2"]
+
+[ext_resource type="Script" uid="uid://cam0vn18cocx5" path="res://scripts/pumpkin.gd" id="1_ch6vm"]
+[ext_resource type="Texture2D" uid="uid://dyfj0bjeiu68t" path="res://assets/sprites/raw_pumpkin_rotting.png" id="2_2inn6"]
+[ext_resource type="Texture2D" uid="uid://b71ia1kyh3vp" path="res://assets/sprites/raw_pupmkin.png" id="2_8p3yo"]
+[ext_resource type="Script" uid="uid://bkjc8uajktl5m" path="res://scripts/pickup_area.gd" id="3_8p3yo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kanjq"]
+atlas = ExtResource("2_2inn6")
+region = Rect2(504, 0, 504, 337)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4siox"]
+atlas = ExtResource("2_2inn6")
+region = Rect2(504, 337, 504, 337)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wx4lb"]
+atlas = ExtResource("2_2inn6")
+region = Rect2(504, 674, 504, 337)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2inn6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kanjq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4siox")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wx4lb")
+}],
+"loop": false,
+"name": &"rotting",
+"speed": 2.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ch6vm"]
+size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ch6vm"]
+radius = 13.0
+
+[node name="Pumpkin" type="RigidBody2D"]
+gravity_scale = 0.0
+script = ExtResource("1_ch6vm")
+
+[node name="pumpkin_bad" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(-0.5, -1.5)
+scale = Vector2(0.0456349, 0.0563798)
+sprite_frames = SubResource("SpriteFrames_2inn6")
+animation = &"rotting"
+
+[node name="pumpkin_good" type="Sprite2D" parent="."]
+position = Vector2(5.96046e-08, -2.25)
+scale = Vector2(1.125, 1.1)
+texture = ExtResource("2_8p3yo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_ch6vm")
+
+[node name="pickup_area" type="Area2D" parent="."]
+script = ExtResource("3_8p3yo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="pickup_area"]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_ch6vm")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="animation_finished" from="pumpkin_bad" to="." method="_on_pumpkin_bad_animation_finished"]
+[connection signal="body_entered" from="pickup_area" to="pickup_area" method="_on_body_entered"]
+[connection signal="body_exited" from="pickup_area" to="pickup_area" method="_on_body_exited"]

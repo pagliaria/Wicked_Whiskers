@@ -1,0 +1,207 @@
+[gd_scene load_steps=26 format=3 uid="uid://bnvsfha2gkpal"]
+
+[ext_resource type="Script" uid="uid://dtcw4qibutrx" path="res://scripts/customer.gd" id="1_xss0h"]
+[ext_resource type="Texture2D" uid="uid://bpik15hp2cfs2" path="res://assets/sprites/ghost.png" id="2_xss0h"]
+[ext_resource type="AudioStream" uid="uid://nsikjepg4w5p" path="res://assets/sounds/smack.mp3" id="3_8qg4y"]
+[ext_resource type="AudioStream" uid="uid://ctoe85y8k6huh" path="res://assets/sounds/scream-85218.mp3" id="4_rjbu2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qg4y"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rjbu2"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qqxhk"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_846g6"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qj8gj"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w2wat"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pk6lr"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pm32s"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2aad"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hnsn0"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r88ql"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_02a8g"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0m07s"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(0, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3ht7"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(64, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lhulq"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtihf"]
+atlas = ExtResource("2_xss0h")
+region = Rect2(192, 192, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_02a8g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8qg4y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rjbu2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qqxhk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_846g6")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qj8gj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w2wat")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pk6lr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pm32s")
+}],
+"loop": true,
+"name": &"walk_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t2aad")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hnsn0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r88ql")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_02a8g")
+}],
+"loop": true,
+"name": &"walk_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m07s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y3ht7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lhulq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtihf")
+}],
+"loop": true,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ktfjk"]
+radius = 2.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xss0h"]
+radius = 15.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8qg4y"]
+bg_color = Color(0.180141, 0.721221, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbu2"]
+bg_color = Color(0.977949, 0.230255, 0.769886, 1)
+
+[node name="customer" type="CharacterBody2D"]
+z_index = 5
+script = ExtResource("1_xss0h")
+
+[node name="ghost" type="AnimatedSprite2D" parent="."]
+z_index = 2
+scale = Vector2(0.5625, 0.5625)
+sprite_frames = SubResource("SpriteFrames_02a8g")
+animation = &"walk_down"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 2
+shape = SubResource("CircleShape2D_ktfjk")
+
+[node name="diretionTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="RayCastRight" type="RayCast2D" parent="."]
+target_position = Vector2(17, 0)
+
+[node name="ghost_body" type="Area2D" parent="."]
+collision_layer = 513
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ghost_body"]
+shape = SubResource("CircleShape2D_xss0h")
+
+[node name="remove_timer" type="Timer" parent="."]
+
+[node name="smack" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_8qg4y")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+visible = false
+custom_minimum_size = Vector2(2, 0)
+offset_left = -8.0
+offset_top = -18.0
+offset_right = 7.0
+offset_bottom = -16.0
+theme_override_constants/outline_size = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_8qg4y")
+theme_override_styles/fill = SubResource("StyleBoxFlat_rjbu2")
+rounded = true
+fill_mode = 1
+show_percentage = false
+
+[node name="scream" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_rjbu2")
+
+[connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="timeout" from="diretionTimer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="ghost_body" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="remove_timer" to="." method="_on_remove_timer_timeout"]

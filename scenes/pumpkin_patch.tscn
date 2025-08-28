@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://xvxro4ui6fv5"]
+
+[ext_resource type="Texture2D" uid="uid://cbfggr3ggk5lr" path="res://assets/sprites/pumpkin_patch.png" id="1_5dglq"]
+[ext_resource type="Script" uid="uid://cg43ybfmqgywb" path="res://scripts/pumpkin_patch.gd" id="2_w60p4"]
+
+[node name="Sprite2D" type="Sprite2D"]
+position = Vector2(-1.19209e-07, 0)
+scale = Vector2(0.0968935, 0.0968935)
+texture = ExtResource("1_5dglq")
+script = ExtResource("2_w60p4")
+
+[node name="grow" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[connection signal="timeout" from="grow" to="." method="_on_grow_timeout"]
