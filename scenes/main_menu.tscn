@@ -1,0 +1,175 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2sjg0nswhljq"]
+
+[ext_resource type="Script" uid="uid://boekvosxlovan" path="res://scripts/main_menu.gd" id="1_l6cm7"]
+[ext_resource type="PackedScene" uid="uid://ca0i1oa70m5ki" path="res://scenes/game.tscn" id="2_ekxnf"]
+[ext_resource type="Texture2D" uid="uid://b0r6hq80teod1" path="res://assets/sprites/knight.png" id="3_bqqt6"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l6cm7")
+game = ExtResource("2_ekxnf")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="name" type="LineEdit" parent="Panel"]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 152.0
+offset_right = 1088.0
+offset_bottom = 182.333
+alignment = 1
+
+[node name="host" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 232.0
+offset_right = 1088.0
+offset_bottom = 297.0
+text = "HOST"
+
+[node name="join" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 328.0
+offset_right = 1088.0
+offset_bottom = 393.0
+text = "JOIN"
+
+[node name="start" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 424.0
+offset_right = 1088.0
+offset_bottom = 489.0
+text = "START"
+
+[node name="name_label" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 896.0
+offset_top = 104.0
+offset_right = 1024.0
+offset_bottom = 126.333
+text = "Name"
+horizontal_alignment = 1
+
+[node name="status" type="Label" parent="Panel"]
+offset_left = 592.0
+offset_top = 520.0
+offset_right = 1328.0
+offset_bottom = 542.333
+horizontal_alignment = 1
+
+[node name="player1" type="VBoxContainer" parent="Panel" groups=["player_spots"]]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 512.0
+offset_top = 640.0
+offset_right = -1280.0
+offset_bottom = -248.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="player_name" type="Label" parent="Panel/player1"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TextureRect" type="Sprite2D" parent="Panel/player1"]
+position = Vector2(64, 96)
+scale = Vector2(3.16667, 3.16667)
+texture = ExtResource("3_bqqt6")
+region_enabled = true
+region_rect = Rect2(0, 0, 30.0599, 38.1794)
+
+[node name="player2" type="VBoxContainer" parent="Panel" groups=["player_spots"]]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 768.0
+offset_top = 640.0
+offset_right = -1024.0
+offset_bottom = -248.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="player_name" type="Label" parent="Panel/player2"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TextureRect" type="Sprite2D" parent="Panel/player2"]
+position = Vector2(64, 96)
+scale = Vector2(3.16667, 3.16667)
+texture = ExtResource("3_bqqt6")
+region_enabled = true
+region_rect = Rect2(0, 0, 30.0599, 38.1794)
+
+[node name="player3" type="VBoxContainer" parent="Panel" groups=["player_spots"]]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1024.0
+offset_top = 640.0
+offset_right = -768.0
+offset_bottom = -248.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="player_name" type="Label" parent="Panel/player3"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TextureRect" type="Sprite2D" parent="Panel/player3"]
+position = Vector2(64, 96)
+scale = Vector2(3.16667, 3.16667)
+texture = ExtResource("3_bqqt6")
+region_enabled = true
+region_rect = Rect2(0, 0, 30.0599, 38.1794)
+
+[node name="player4" type="VBoxContainer" parent="Panel" groups=["player_spots"]]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1280.0
+offset_top = 640.0
+offset_right = -512.0
+offset_bottom = -248.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="player_name" type="Label" parent="Panel/player4"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TextureRect" type="Sprite2D" parent="Panel/player4"]
+position = Vector2(64, 96)
+scale = Vector2(3.16667, 3.16667)
+texture = ExtResource("3_bqqt6")
+region_enabled = true
+region_rect = Rect2(0, 0, 30.0599, 38.1794)
+
+[connection signal="pressed" from="Panel/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Panel/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Panel/start" to="." method="_on_start_pressed"]

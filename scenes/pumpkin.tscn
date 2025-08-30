@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://by2ickff22ej2"]
+[gd_scene load_steps=12 format=3 uid="uid://by2ickff22ej2"]
 
 [ext_resource type="Script" uid="uid://cam0vn18cocx5" path="res://scripts/pumpkin.gd" id="1_ch6vm"]
 [ext_resource type="Texture2D" uid="uid://dyfj0bjeiu68t" path="res://assets/sprites/raw_pumpkin_rotting.png" id="2_2inn6"]
@@ -40,6 +40,8 @@ size = Vector2(16, 16)
 [sub_resource type="CircleShape2D" id="CircleShape2D_ch6vm"]
 radius = 13.0
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2inn6"]
+
 [node name="Pumpkin" type="RigidBody2D"]
 gravity_scale = 0.0
 script = ExtResource("1_ch6vm")
@@ -66,6 +68,9 @@ script = ExtResource("3_8p3yo")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="pickup_area"]
 position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_ch6vm")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_2inn6")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

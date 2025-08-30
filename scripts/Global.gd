@@ -1,7 +1,7 @@
 extends Node
 
 var night = 1
-var night_time_sec = 60
+var night_time_sec = 300
 var ORDER_TIMEOUT_SEC = 30
 
 var night_passed = false
