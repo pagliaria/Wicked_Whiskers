@@ -14,6 +14,10 @@ enum GrowState {
 var grow_state = GrowState.SEED
 
 func _on_grow_timeout() -> void:
+	grow_pumpkin.rpc()
+	
+@rpc("any_peer","call_local")
+func grow_pumpkin():
 	grow_state = (grow_state + 1) as GrowState
 
 	match grow_state:

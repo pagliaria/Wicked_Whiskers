@@ -1,9 +1,9 @@
 extends Node2D
 
+@export var player_scene: PackedScene
 @export var customer: PackedScene
 @onready var night_timer: Timer = $night_timer
 @onready var progress_bar: ProgressBar = $ProgressBar
-@onready var player: CharacterBody2D = $Player
 @onready var spawn_timer: Timer = $spwan_point/spawn_timer
 @onready var happy_cat: StaticBody2D = $happy_cat
 @onready var angry_cat: StaticBody2D = $angry_cat
@@ -11,6 +11,8 @@ extends Node2D
 @onready var win: Label = $win
 @onready var night: Label = $night
 @onready var next_night: Label = $next_night
+@onready var multiplayer_spawner: MultiplayerSpawner = $MultiplayerSpawner
+@onready var spwan_point: Node2D = $spwan_point
 
 var orderTime
 var night_start_time
@@ -19,12 +21,31 @@ var night_start_time
 func _ready() -> void:
 	OrderManager.set_order_display($orders/MarginContainer/orders_display)
 	night_start_time = Time.get_unix_time_from_system()
+	
+	#add players
+	var index = 0
+	for p in MultiplayerManager.Players:
+		var current_player = player_scene.instantiate()
+		add_child(current_player, true)
+		current_player.set_player_id(MultiplayerManager.Players[p].id)
+		current_player.set_player_name(MultiplayerManager.Players[p].name)
+		
+		for spawn in get_tree().get_nodes_in_group("PlayerSpawnPoints"):
+			if spawn.name == str(index):
+				current_player.global_position = spawn.global_position
+		index += 1
+		
 	new_night(Enums.get_night())
 
 func _on_spawn_timer_timeout() -> void:
+	if !is_multiplayer_authority():
+		return
+	
 	var customer_scene_instance = customer.instantiate()
-	customer_scene_instance.global_position = $spwan_point.global_position
-	add_child(customer_scene_instance, true)
+	#customer_scene_instance.global_position = spwan_point.global_position
+	#add_child(customer_scene_instance, true)
+	spwan_point.add_child(customer_scene_instance, true)
+	customer_scene_instance.global_position = spwan_point.global_position
 
 func _process(_delta: float) -> void:
 	progress_bar.value = ((Time.get_unix_time_from_system() - night_start_time) / Enums.get_night_time()) * 100
