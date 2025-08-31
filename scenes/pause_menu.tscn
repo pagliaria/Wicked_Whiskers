@@ -1,0 +1,126 @@
+[gd_scene load_steps=6 format=3 uid="uid://dqoxg6cbi1fxe"]
+
+[ext_resource type="Script" uid="uid://b0fbjo82tsnyp" path="res://scripts/pause_menu.gd" id="1_myx47"]
+[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_n87rw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n87rw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_myx47"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kukqi"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.0807833, 0.0807834, 0.0807833, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="pause_menu" type="Control"]
+process_mode = 3
+z_index = 10
+layout_mode = 3
+anchor_left = -0.121
+anchor_top = -0.111
+anchor_right = 0.162
+anchor_bottom = 0.163
+offset_left = 0.320007
+offset_top = -0.119987
+offset_right = 0.959991
+offset_bottom = -0.0400085
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_myx47")
+
+[node name="Panel" type="Panel" parent="."]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="resume" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 56.0
+offset_right = 488.0
+offset_bottom = 90.0
+theme_override_fonts/font = ExtResource("1_n87rw")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_n87rw")
+text = "Resume"
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.106
+offset_bottom = 16.624
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_n87rw")
+theme_override_font_sizes/font_size = 20
+text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="quit" type="Button" parent="Panel"]
+process_mode = 3
+offset_left = 352.0
+offset_top = 112.0
+offset_right = 488.0
+offset_bottom = 146.0
+theme_override_fonts/font = ExtResource("1_n87rw")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_myx47")
+text = "Quit"
+
+[node name="controls" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.118
+anchor_top = 0.243
+anchor_right = 0.456
+anchor_bottom = 0.541
+offset_left = -24.192
+offset_top = -15.928
+offset_right = 15.936
+offset_bottom = 7.864
+theme_override_fonts/font = ExtResource("1_n87rw")
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_kukqi")
+text = "Controls:
+
+W,A,S,D:  Move
+1-5: Give order
+Enter: Interact"
+
+[node name="Label2" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.106
+offset_top = 184.0
+offset_bottom = 200.624
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_n87rw")
+theme_override_font_sizes/font_size = 15
+text = "Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="Panel"]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 224.0
+offset_right = 368.0
+offset_bottom = 240.0
+max_value = 3.0
+step = 0.1
+
+[connection signal="pressed" from="Panel/resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="Panel/quit" to="." method="_on_quit_pressed"]
+[connection signal="value_changed" from="Panel/HSlider" to="." method="_on_h_slider_value_changed"]
