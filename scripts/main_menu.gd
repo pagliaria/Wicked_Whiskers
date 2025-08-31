@@ -1,10 +1,12 @@
 extends Control
 
 @export var game: PackedScene
-@export var address = "127.0.0.1"
+@export var address = "147.185.221.31"
+@export var join_port = 38507
 @export var port = 10537
-@onready var my_name: LineEdit = $Panel/name
-@onready var status: Label = $Panel/status
+@onready var status: Label = $CenterContainer/Panel/status
+@onready var my_name: LineEdit = $CenterContainer/Panel/name
+@onready var start: Button = $CenterContainer/Panel/start
 
 var players = {}
 var peer
@@ -56,7 +58,8 @@ func connection_failed():
 
 @rpc("any_peer", "call_local")
 func start_game():
-	get_tree().root.add_child(game.instantiate())
+	#get_tree().root.add_child(game.instantiate())
+	get_tree().change_scene_to_file("res://scenes/game.tscn")
 	self.hide()
 
 func _on_start_pressed() -> void:
@@ -70,17 +73,21 @@ func _on_host_pressed() -> void:
 	if error != OK:
 		print("cannt connect: ", error)
 		return
-	peer.host.compress(ENetConnection.COMPRESS_RANGE_CODER)
+	#peer.host.compress(ENetConnection.COMPRESS_RANGE_CODER)
 	
 	multiplayer.multiplayer_peer = peer
 	
 	print("waiting for players...")
 	status.text = "Waiting for players..."
 	send_player_info(my_name.text, multiplayer.get_unique_id())
+	start.disabled = false
 
 func _on_join_pressed() -> void:
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client(address, port)
-	peer.host.compress(ENetConnection.COMPRESS_RANGE_CODER)
+	peer.create_client(address, join_port)
+	#peer.host.compress(ENetConnection.COMPRESS_RANGE_CODER)
 	
 	multiplayer.multiplayer_peer = peer
+
+func _on_quit_pressed() -> void:
+	get_tree().quit()

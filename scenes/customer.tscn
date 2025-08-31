@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bnvsfha2gkpal"]
+[gd_scene load_steps=27 format=3 uid="uid://bnvsfha2gkpal"]
 
 [ext_resource type="Script" uid="uid://dtcw4qibutrx" path="res://scripts/customer.gd" id="1_xss0h"]
 [ext_resource type="Texture2D" uid="uid://bpik15hp2cfs2" path="res://assets/sprites/ghost.png" id="2_xss0h"]
@@ -152,6 +152,20 @@ bg_color = Color(0.180141, 0.721221, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbu2"]
 bg_color = Color(0.977949, 0.230255, 0.769886, 1)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rjbu2"]
+properties/0/path = NodePath("ghost:animation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("ghost:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("ghost:visible")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:position")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
 [node name="customer" type="CharacterBody2D"]
 z_index = 5
 script = ExtResource("1_xss0h")
@@ -200,6 +214,9 @@ show_percentage = false
 
 [node name="scream" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_rjbu2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_rjbu2")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="diretionTimer" to="." method="_on_timer_timeout"]

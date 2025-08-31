@@ -2,17 +2,21 @@ extends Node2D
 
 @export var player_scene: PackedScene
 @export var customer: PackedScene
+@export var cat: PackedScene
+@export var patch: PackedScene
+
 @onready var night_timer: Timer = $night_timer
 @onready var progress_bar: ProgressBar = $ProgressBar
-@onready var spawn_timer: Timer = $spwan_point/spawn_timer
+@onready var spawn_timer: Timer = $customer_spwan_point/spawn_timer
 @onready var happy_cat: StaticBody2D = $happy_cat
 @onready var angry_cat: StaticBody2D = $angry_cat
 @onready var surprised_cat: StaticBody2D = $surprised_cat
 @onready var win: Label = $win
 @onready var night: Label = $night
 @onready var next_night: Label = $next_night
-@onready var multiplayer_spawner: MultiplayerSpawner = $MultiplayerSpawner
-@onready var spwan_point: Node2D = $spwan_point
+@onready var spwan_point: Node2D = $customer_spwan_point
+@onready var pumpkin_spawn_locations: Node = $pumpkin_spawn_locations
+@onready var cat_spawn_locations: Node = $cat_spawn_locations
 
 var orderTime
 var night_start_time
@@ -65,6 +69,49 @@ func day_end():
 		
 	get_tree().paused = true
 
+func add_cats(n: int, type:Enums.OrderType):
+	if !is_multiplayer_authority():
+		return
+		
+	var spawns = []
+	for i in n:
+		var rand = randi_range(0, 10)
+		while spawns.has(rand):
+			rand = randi_range(0, 10)
+		spawns.append(rand)
+	print("cat locations: ", spawns)
+	
+	for location in spawns:
+		var node:Node = cat_spawn_locations.get_node(str(location))
+		var cat_scene:Node2D = cat.instantiate()
+		cat_spawn_locations.add_child(cat_scene, true)
+		cat_scene.set_type.rpc(type)
+		var position_node =  cat_spawn_locations.get_node(str(location))
+		cat_scene.global_position = position_node.global_position
+		
+# Generate patches. cant do more than there are spawn locations in "pumpkin_spawn_locations"
+func add_pumpkin_patchs(n:int):
+	if !is_multiplayer_authority():
+		return
+		
+	var spawns = []
+	for i in n:
+		var rand = randi_range(0, 10)
+		while spawns.has(rand):
+			rand = randi_range(0, 10)
+		spawns.append(rand)
+	print("patch locations: ", spawns)
+	
+	for location in spawns:
+		var node:Node = pumpkin_spawn_locations.get_node(str(location))
+		#var spawner = MultiplayerSpawner.new()
+		#add_child(spawner)
+		#spawner.spawn_path = NodePath(node.get_path()) 
+		var patch_scene:Node2D = patch.instantiate()
+		pumpkin_spawn_locations.add_child(patch_scene, true)
+		var position_node =  pumpkin_spawn_locations.get_node(str(location))
+		patch_scene.global_position = position_node.global_position
+
 func new_night(d:int):
 	night.text = "Night " + str(Enums.get_night())
 	
@@ -72,6 +119,11 @@ func new_night(d:int):
 		1:
 			spawn_timer.start(10)
 			Enums.ORDER_TIMEOUT_SEC = 30
+			
+			#Spawn pumpkin patches
+			add_pumpkin_patchs(2)
+			#Spawn cats
+			add_cats(2, Enums.OrderType.HAPPY)
 		2:
 			spawn_timer.start(8)
 			Enums.ORDER_TIMEOUT_SEC = 25

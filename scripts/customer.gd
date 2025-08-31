@@ -37,8 +37,8 @@ func _process(_delta: float) -> void:
 	if ordered:
 		progress_bar.value = ((Time.get_unix_time_from_system() - order_time) / Enums.ORDER_TIMEOUT_SEC) * 100
 		#print("progress: ", progress_bar.value)
-		bubble_scene_instance.global_position.x = position.x + 20
-		bubble_scene_instance.global_position.y = position.y - 30
+		bubble_scene_instance.global_position.x = global_position.x + 20
+		bubble_scene_instance.global_position.y =global_position.y - 30
 		
 		if progress_bar.value >= 100 || wrong_order:
 			#problems!
@@ -53,7 +53,7 @@ func _process(_delta: float) -> void:
 				set_collision_mask_value(1, false)
 				attacking = true
 			else:
-				direction = global_position.direction_to(get_parent().get_node("Player").global_position)
+				direction = global_position.direction_to(get_parent().get_parent().get_node("Player").global_position)
 				play_directional_animation()
 
 	if hit_by_order && hit_item != null:
@@ -107,6 +107,7 @@ func _on_timer_timeout() -> void:
 		speed = 0
 		animation.stop()
 
+@rpc("any_peer","call_local")
 func play_directional_animation():
 	var direction_id = int(round(direction.angle() / TAU * DIR_4.size()))
 	#print("direction: ", direction_id)
@@ -143,7 +144,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			hit_item = body
 			if order.get_order_type() != body.getType():
 				problems = true
-			remove_timer.start(2)
+			remove_timer.start(1)
 
 func _on_remove_timer_timeout() -> void:
 	remove_timer.stop()
@@ -152,4 +153,5 @@ func _on_remove_timer_timeout() -> void:
 	if problems:
 		wrong_order = true
 	else:
-		queue_free()
+		if is_multiplayer_authority():
+			queue_free()

@@ -8,8 +8,9 @@ extends StaticBody2D
 @onready var surprised: TextureRect = $surprised
 
 var cutting: AudioStreamPlayer2D = null
-var type = Enums.OrderType.HAPPY
+var type = Enums.OrderType.INVALID
 
+@rpc("any_peer","call_local")
 func carve():
 	sprite.play("carving")
 	timer.start(5)
@@ -19,23 +20,26 @@ func carve():
 func _ready() -> void:
 	sprite.play("idle")
 	cutting = $cutting
-	var meta_type =  get_meta("Type")
-	print("metadata: ", meta_type)
-	if meta_type == "happy":
-		type = Enums.OrderType.HAPPY
-		happy.visible = true
-	if meta_type == "angry":
-		type = Enums.OrderType.ANGRY
-		angry.visible = true
-		animated_sprite_2d.modulate = Color(1, 0, 0, 1)
-	if meta_type == "surprised":
-		type = Enums.OrderType.SURPRISED
-		surprised.visible = true
-		animated_sprite_2d.modulate = Color(0, 1, 0, 1)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
+	
+@rpc("any_peer", "call_local")
+func set_type(t: Enums.OrderType):
+	print("type: ", t)
+	if t == Enums.OrderType.HAPPY:
+		type = Enums.OrderType.HAPPY
+		happy.visible = true
+	if t == Enums.OrderType.ANGRY:
+		type = Enums.OrderType.ANGRY
+		angry.visible = true
+		animated_sprite_2d.modulate = Color(1, 0, 0, 1)
+	if t == Enums.OrderType.SURPRISED:
+		type = Enums.OrderType.SURPRISED
+		surprised.visible = true
+		animated_sprite_2d.modulate = Color(0, 1, 0, 1)
 	
 func _on_timer_timeout() -> void:
 	sprite.play("idle")

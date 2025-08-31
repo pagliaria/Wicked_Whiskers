@@ -5130,6 +5130,8 @@ size = Vector2(42, 15.5)
 script = ExtResource("1_iywne")
 player_scene = ExtResource("1_uwrxv")
 customer = ExtResource("2_u5sy4")
+cat = ExtResource("4_lbhrr")
+patch = ExtResource("8_0tnpc")
 
 [node name="pause_handler" parent="." instance=ExtResource("3_dinhu")]
 
@@ -5150,6 +5152,8 @@ offset = Vector2(1, -1)
 zoom = Vector2(3, 3)
 
 [node name="happy_cat" parent="." instance=ExtResource("4_lbhrr")]
+process_mode = 4
+visible = false
 position = Vector2(148, -15.75)
 metadata/Type = "happy"
 
@@ -5171,10 +5175,10 @@ volume_db = -15.0
 autoplay = true
 parameters/looping = true
 
-[node name="spwan_point" type="Node2D" parent="."]
+[node name="customer_spwan_point" type="Node2D" parent="."]
 position = Vector2(-288, 64)
 
-[node name="spawn_timer" type="Timer" parent="spwan_point"]
+[node name="spawn_timer" type="Timer" parent="customer_spwan_point"]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(-3, -1)
@@ -5195,6 +5199,8 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="patch1" parent="." instance=ExtResource("8_0tnpc")]
+process_mode = 4
+visible = false
 position = Vector2(146, 86)
 scale = Vector2(0.0661982, 0.0661982)
 
@@ -5270,9 +5276,9 @@ position = Vector2(50, -14)
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_dinhu")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="CustomerMultiSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://bnvsfha2gkpal")
-spawn_path = NodePath("../spwan_point")
+spawn_path = NodePath("../customer_spwan_point")
 
 [node name="borders" type="Node" parent="."]
 
@@ -5290,5 +5296,83 @@ position = Vector2(-3, -1)
 position = Vector2(-285, 105)
 shape = SubResource("RectangleShape2D_ir15t")
 
-[connection signal="timeout" from="spwan_point/spawn_timer" to="." method="_on_spawn_timer_timeout"]
+[node name="cat_spawn_locations" type="Node" parent="."]
+
+[node name="0" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(88, -16)
+
+[node name="1" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(304, -32)
+
+[node name="2" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(296, 40)
+
+[node name="3" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(272, 96)
+
+[node name="4" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(168, -16)
+
+[node name="5" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(128, 144)
+
+[node name="6" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(80, 80)
+
+[node name="7" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(272, 152)
+
+[node name="8" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(240, -16)
+
+[node name="9" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(112, 32)
+
+[node name="10" type="Node2D" parent="cat_spawn_locations"]
+position = Vector2(328, 88)
+
+[node name="pumpkin_spawn_locations" type="Node" parent="."]
+
+[node name="0" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(72, 8)
+
+[node name="1" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(264, -40)
+
+[node name="2" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(264, 24)
+
+[node name="3" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(232, 80)
+
+[node name="4" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(168, 8)
+
+[node name="5" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(80, 152)
+
+[node name="6" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(136, 72)
+
+[node name="7" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(216, 136)
+
+[node name="8" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(216, 24)
+
+[node name="9" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(192, 56)
+
+[node name="10" type="Node2D" parent="pumpkin_spawn_locations"]
+position = Vector2(320, 128)
+
+[node name="CatMultiSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://cwdbrcsymihsk")
+spawn_path = NodePath("../cat_spawn_locations")
+
+[node name="PatchMultiSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://xvxro4ui6fv5")
+spawn_path = NodePath("../pumpkin_spawn_locations")
+
+[connection signal="timeout" from="customer_spwan_point/spawn_timer" to="." method="_on_spawn_timer_timeout"]
 [connection signal="gui_input" from="orders" to="." method="_on_orders_gui_input"]

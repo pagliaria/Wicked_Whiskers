@@ -7,7 +7,7 @@ var order_display = {}
 const ORDER_SCENE = preload("res://scenes/order.tscn")
 
 func add_order(order: Order) -> int:
-	for i in range(1, 5):
+	for i in range(1, 9):
 		if orders.has(i):
 			continue
 		else:
@@ -22,6 +22,7 @@ func add_order(order: Order) -> int:
 			
 	return 0
 		
+@rpc("any_peer")
 func remove_order(number: int) -> CharacterBody2D:
 	var retVal = orders[number].get_customer()
 	orders[number].get_customer().on_order_complete()

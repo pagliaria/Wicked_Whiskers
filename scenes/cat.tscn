@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cwdbrcsymihsk"]
+[gd_scene load_steps=20 format=3 uid="uid://cwdbrcsymihsk"]
 
 [ext_resource type="Script" uid="uid://ygv76hommnug" path="res://scripts/cat.gd" id="1_7vi38"]
 [ext_resource type="Texture2D" uid="uid://dtm34c4315nqf" path="res://assets/sprites/cat_carving3.png" id="1_se5fe"]
@@ -77,6 +77,14 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_se5fe"]
 size = Vector2(19, 22.906)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ic5u8"]
+properties/0/path = NodePath("AnimatedSprite2D:animation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="cat" type="StaticBody2D"]
 position = Vector2(0, 4.25)
 scale = Vector2(1, 0.873134)
@@ -135,6 +143,9 @@ shape = SubResource("RectangleShape2D_se5fe")
 [node name="cutting" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_cxap7")
 volume_db = -11.243
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ic5u8")
 
 [connection signal="body_entered" from="cat_area" to="cat_area" method="_on_body_entered"]
 [connection signal="body_exited" from="cat_area" to="cat_area" method="_on_body_exited"]
