@@ -69,6 +69,7 @@ vertical_alignment = 1
 
 [node name="quit" type="Button" parent="Panel"]
 process_mode = 3
+layout_mode = 0
 offset_left = 352.0
 offset_top = 112.0
 offset_right = 488.0
@@ -95,7 +96,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_kukqi")
 text = "Controls:
 
 W,A,S,D:  Move
-1-5: Give order
+1-9: Give order
 Enter: Interact"
 
 [node name="Label2" type="Label" parent="Panel"]

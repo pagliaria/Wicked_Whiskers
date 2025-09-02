@@ -9,9 +9,11 @@ extends StaticBody2D
 
 var cutting: AudioStreamPlayer2D = null
 var type = Enums.OrderType.INVALID
+var busy = false
 
 @rpc("any_peer","call_local")
 func carve():
+	busy = true
 	sprite.play("carving")
 	timer.start(5)
 	cutting.play()
@@ -50,3 +52,7 @@ func _on_timer_timeout() -> void:
 	jack_scene_instance.global_position = Vector2(global_position.x - 15, global_position.y - 5)
 	get_parent().add_child(jack_scene_instance, true)
 	jack_scene_instance.setType(type)
+	busy = false
+
+func is_busy() -> bool:
+	return busy

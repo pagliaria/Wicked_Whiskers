@@ -22,14 +22,11 @@ func add_order(order: Order) -> int:
 			
 	return 0
 		
-@rpc("any_peer")
-func remove_order(number: int) -> CharacterBody2D:
-	var retVal = orders[number].get_customer()
-	orders[number].get_customer().on_order_complete()
+@rpc("any_peer","call_local")
+func remove_order(number: int):
 	orders.erase(number)
 	order_display[number].queue_free()
 	order_display.erase(number)
-	return retVal
 
 func set_order_display(display: HBoxContainer):
 	orders_display = display

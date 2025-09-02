@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 const SPEED = 130.0
+const THROW_SPEED = 300
+const SPIN_SPEED = 2000
 
 @onready var throw: AudioStreamPlayer2D = $throw
 @onready var squish: AudioStreamPlayer2D = $squish
@@ -25,20 +27,20 @@ func _input(event):
 	if !dead:
 		if event.is_pressed() && event.as_text() == "1" || event.as_text() == "2" || event.as_text() == "3" || event.as_text() == "4" || event.as_text() == "5":
 			var order = OrderManager.get_order(int(event.as_text()))
-			if order != null:
-				#if current_held_item.getType() == order.get_order_type():
+			if order != null && current_held_item != null:
 					var num = int(event.as_text())
+					target_node = order.get_customer()
 					turn_in_order.rpc(current_held_item.get_path(), num)
 					print("have it!")
 					play_sound.rpc(throw.get_path())
-					target_node = OrderManager.remove_order(num)
-					OrderManager.remove_order.rpc(num)
+					#target_node = OrderManager.remove_order(num)
+					#OrderManager.remove_order.rpc(num)
 					current_held_item.set_customer(target_node)
 					current_held_item.lock_rotation = false
 					throw_order = true
 		
 		if event.is_action_pressed("interact"):
-			if current_cat_in_range != null && current_held_item != null && !current_held_item.name.contains("jack"):
+			if current_cat_in_range != null && current_held_item != null && !current_held_item.name.contains("jack") && !current_cat_in_range.is_busy():
 				# give pumpkin to cat
 				print("gave pumpkin to cat!")
 				squish.play()
@@ -162,8 +164,8 @@ func move_pumpkin(node, x, y):
 @rpc("any_peer","call_local")	
 func throw_pumpkin(node, direction):
 	var obj = get_node(node)
-	obj.apply_central_impulse(direction * 1000)
-	obj.apply_torque_impulse(2000)
+	obj.apply_central_impulse(direction * THROW_SPEED)
+	obj.apply_torque_impulse(SPIN_SPEED)
 	
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	if area.is_in_group("items"): # Assuming items are in an "items" group
