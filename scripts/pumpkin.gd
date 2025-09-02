@@ -34,7 +34,8 @@ func death():
 	
 func _on_pumpkin_bad_animation_finished() -> void:
 	print("pumpkin death")
-	queue_free()
+	if is_multiplayer_authority():
+		queue_free()
 
 func set_customer(c: CharacterBody2D):
 	customer = c

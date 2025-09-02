@@ -46,7 +46,7 @@ func _process(_delta: float) -> void:
 				scream.play()
 				animation.modulate = Color(1, 0, 0, 0.8)
 				progress_bar.visible = false
-				bubble_scene_instance.visible = false
+				#bubble_scene_instance.visible = false
 				speed = 100
 				diretion_timer.stop()
 				#set_collision_layer_value(1, false)
@@ -124,10 +124,6 @@ func play_directional_animation():
 func _on_ready() -> void:
 	animation = $ghost
 	animation.play("walk_right")
-
-func on_order_complete():
-	print("Thanks!")
-	#queue_free()
 	
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	#if !hit_by_order && body.name.contains("jack"):
@@ -136,14 +132,17 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		#print("Entered customer: ", body.name, order_number, jack.get_order_number())
 		if body.get_order_number() == order_number:
 			smack.play()
-			bubble_scene_instance.visible = false
 			print("Entered customer: ", body.name)
-			diretion_timer.stop()
-			hit_by_order = true
-			progress_bar.visible = false
+			diretion_timer.stop()			
 			hit_item = body
+			progress_bar.visible = false
 			if order.get_order_type() != body.getType():
 				problems = true
+			else:
+				OrderManager.remove_order.rpc(order_number)
+				hit_by_order = true
+				bubble_scene_instance.visible = false
+				problems = false
 			remove_timer.start(1)
 
 func _on_remove_timer_timeout() -> void:
