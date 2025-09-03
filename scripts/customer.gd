@@ -171,3 +171,6 @@ func _on_remove_timer_timeout() -> void:
 	else:
 		if is_multiplayer_authority():
 			queue_free()
+
+func set_player(p: CharacterBody2D):
+	player = p

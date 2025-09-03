@@ -46,10 +46,20 @@ func _on_spawn_timer_timeout() -> void:
 	if !is_multiplayer_authority():
 		return
 	
+	var int_rand = randi_range(0, MultiplayerManager.Players.size()-1) 	
+	var found_nodes: Array[CharacterBody2D] = []
+
+	for child in get_children():
+		# Check if the child is a Label or a node with a 'text' property
+		if child is CharacterBody2D:
+			if child.name.contains("Player"):
+				found_nodes.append(child)
+		
 	var customer_scene_instance = customer.instantiate()
 	#customer_scene_instance.global_position = spwan_point.global_position
 	#add_child(customer_scene_instance, true)
 	customer_spwan_point.add_child(customer_scene_instance, true)
+	customer_scene_instance.set_playerd(found_nodes[int_rand])
 	customer_scene_instance.global_position = customer_spwan_point.global_position
 
 func _process(_delta: float) -> void:
