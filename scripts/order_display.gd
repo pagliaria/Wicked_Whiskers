@@ -6,6 +6,11 @@ var order_time
 @onready var happy: TextureRect = $Panel/happy
 @onready var angry: TextureRect = $Panel/angry
 @onready var surprised: TextureRect = $Panel/surprised
+@onready var hat_image: TextureRect = $Panel/hat_image
+const CAP = preload("res://assets/sprites/hats/cap.png")
+const COWBOY = preload("res://assets/sprites/hats/cowboy.png")
+const SOMBRARO = preload("res://assets/sprites/hats/sombraro.png")
+const WITCH_HAT = preload("res://assets/sprites/hats/witch_hat.png")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -29,3 +34,18 @@ func setType(t: Enums.OrderType):
 			angry.visible = true
 		Enums.OrderType.SURPRISED:
 			surprised.visible = true
+
+func set_hat(h: Enums.HatType):
+	match h:
+		Enums.HatType.WITCH:
+			hat_image.visible = true
+			hat_image.texture = WITCH_HAT
+		Enums.HatType.CAP:
+			hat_image.visible = true
+			hat_image.texture = CAP
+		Enums.HatType.COWBOY:
+			hat_image.visible = true
+			hat_image.texture = COWBOY
+		Enums.HatType.SOMBRARO:
+			hat_image.visible = true
+			hat_image.texture = SOMBRARO

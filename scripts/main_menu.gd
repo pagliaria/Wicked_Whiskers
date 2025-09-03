@@ -91,3 +91,12 @@ func _on_join_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_single_player_pressed() -> void:
+	MultiplayerManager.Players[1] = {
+			"name" : my_name.text,
+			"id" : 1,
+			"score" : 0
+		}
+	start_game()

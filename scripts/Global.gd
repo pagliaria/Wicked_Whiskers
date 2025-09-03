@@ -1,10 +1,18 @@
 extends Node
 
 var night = 1
-var night_time_sec = 300
+var night_time_sec = 180
 var ORDER_TIMEOUT_SEC = 30
 
 var night_passed = false
+
+enum HatType {
+	NONE,
+	WITCH,
+	CAP,
+	COWBOY,
+	SOMBRARO
+}
 
 enum OrderType {
 	INVALID,

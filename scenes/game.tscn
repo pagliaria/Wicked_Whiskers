@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://ca0i1oa70m5ki"]
+[gd_scene load_steps=42 format=3 uid="uid://ca0i1oa70m5ki"]
 
 [ext_resource type="Script" uid="uid://dglcspbyyrvwh" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://dyaxfw0dpj4fc" path="res://scenes/player.tscn" id="1_uwrxv"]
@@ -19,6 +19,10 @@
 [ext_resource type="Texture2D" uid="uid://75i4rhdr061o" path="res://assets/Tiles/Slice 25.png" id="14_264po"]
 [ext_resource type="Texture2D" uid="uid://btxviwfjvggrp" path="res://assets/Tiles/Slice 24.png" id="15_1kice"]
 [ext_resource type="Texture2D" uid="uid://ctfy6siily1lh" path="res://assets/Tiles/Slice 23.png" id="16_5newe"]
+[ext_resource type="PackedScene" uid="uid://c5ikwbxtyioto" path="res://scenes/witch_hat_table.tscn" id="19_1kice"]
+[ext_resource type="PackedScene" uid="uid://b2turaxy54f0f" path="res://scenes/cap_table.tscn" id="19_bt5mj"]
+[ext_resource type="PackedScene" uid="uid://bpnelqrhs3f7h" path="res://scenes/cowboy_table.tscn" id="20_e1j6l"]
+[ext_resource type="PackedScene" uid="uid://bg78n2u0rl72p" path="res://scenes/sombraro_table.tscn" id="21_pl11u"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -5269,6 +5273,20 @@ position = Vector2(-288, 64)
 
 [node name="spawn_timer" type="Timer" parent="customer_spwan_point"]
 
+[node name="tables" type="Node" parent="."]
+
+[node name="witch_hat_table" parent="tables" instance=ExtResource("19_1kice")]
+position = Vector2(336, 0)
+
+[node name="cap_table" parent="tables" instance=ExtResource("19_bt5mj")]
+position = Vector2(336, 40)
+
+[node name="cowboy_table" parent="tables" instance=ExtResource("20_e1j6l")]
+position = Vector2(336, 80)
+
+[node name="sombraro_table" parent="tables" instance=ExtResource("21_pl11u")]
+position = Vector2(336, 120)
+
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(-3, -1)
 
@@ -5295,6 +5313,7 @@ scale = Vector2(0.0661982, 0.0661982)
 
 [node name="restart" type="Label" parent="."]
 visible = false
+z_index = 10
 offset_left = -80.0
 offset_top = 140.0
 offset_right = 178.0
@@ -5303,6 +5322,7 @@ theme_override_fonts/font = ExtResource("9_0tnpc")
 text = "Press R to restart"
 
 [node name="night" type="Label" parent="."]
+z_index = 10
 offset_left = 271.0
 offset_top = -126.0
 offset_right = 359.0
@@ -5355,16 +5375,16 @@ show_percentage = false
 [node name="spawn_locations" type="Node2D" parent="."]
 
 [node name="0" type="Node2D" parent="spawn_locations" groups=["PlayerSpawnPoints"]]
-position = Vector2(76, 76)
+position = Vector2(73, 50)
 
 [node name="1" type="Node2D" parent="spawn_locations" groups=["PlayerSpawnPoints"]]
-position = Vector2(125, 46)
+position = Vector2(134, 47)
 
 [node name="2" type="Node2D" parent="spawn_locations" groups=["PlayerSpawnPoints"]]
 position = Vector2(101, 7)
 
 [node name="3" type="Node2D" parent="spawn_locations" groups=["PlayerSpawnPoints"]]
-position = Vector2(50, -14)
+position = Vector2(40, -29)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_dinhu")
@@ -5392,25 +5412,25 @@ shape = SubResource("RectangleShape2D_ir15t")
 [node name="cat_spawn_locations" type="Node" parent="."]
 
 [node name="0" type="Node2D" parent="cat_spawn_locations"]
-position = Vector2(88, -16)
+position = Vector2(87, -31)
 
 [node name="1" type="Node2D" parent="cat_spawn_locations"]
 position = Vector2(304, -32)
 
 [node name="2" type="Node2D" parent="cat_spawn_locations"]
-position = Vector2(296, 40)
+position = Vector2(261, 54)
 
 [node name="3" type="Node2D" parent="cat_spawn_locations"]
-position = Vector2(272, 96)
+position = Vector2(280, 121)
 
 [node name="4" type="Node2D" parent="cat_spawn_locations"]
-position = Vector2(168, -16)
+position = Vector2(157, -31)
 
 [node name="5" type="Node2D" parent="cat_spawn_locations"]
 position = Vector2(128, 144)
 
 [node name="6" type="Node2D" parent="cat_spawn_locations"]
-position = Vector2(80, 80)
+position = Vector2(92, 102)
 
 [node name="7" type="Node2D" parent="cat_spawn_locations"]
 position = Vector2(272, 152)
@@ -5422,12 +5442,12 @@ position = Vector2(240, -16)
 position = Vector2(112, 32)
 
 [node name="10" type="Node2D" parent="cat_spawn_locations"]
-position = Vector2(328, 88)
+position = Vector2(278, 90)
 
 [node name="pumpkin_spawn_locations" type="Node" parent="."]
 
 [node name="0" type="Node2D" parent="pumpkin_spawn_locations"]
-position = Vector2(72, 8)
+position = Vector2(53, 12)
 
 [node name="1" type="Node2D" parent="pumpkin_spawn_locations"]
 position = Vector2(264, -40)
@@ -5448,16 +5468,16 @@ position = Vector2(80, 152)
 position = Vector2(136, 72)
 
 [node name="7" type="Node2D" parent="pumpkin_spawn_locations"]
-position = Vector2(216, 136)
+position = Vector2(197, 138)
 
 [node name="8" type="Node2D" parent="pumpkin_spawn_locations"]
 position = Vector2(216, 24)
 
 [node name="9" type="Node2D" parent="pumpkin_spawn_locations"]
-position = Vector2(192, 56)
+position = Vector2(183, 49)
 
 [node name="10" type="Node2D" parent="pumpkin_spawn_locations"]
-position = Vector2(320, 128)
+position = Vector2(228, 120)
 
 [node name="CatMultiSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://cwdbrcsymihsk")

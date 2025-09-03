@@ -6,6 +6,7 @@ extends StaticBody2D
 @onready var angry: TextureRect = $angry
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var surprised: TextureRect = $surprised
+@onready var jack_spawn: Node = $jack_spawn
 
 var cutting: AudioStreamPlayer2D = null
 var type = Enums.OrderType.INVALID
@@ -44,13 +45,16 @@ func set_type(t: Enums.OrderType):
 		animated_sprite_2d.modulate = Color(0, 1, 0, 1)
 	
 func _on_timer_timeout() -> void:
+	if !is_multiplayer_authority():
+		return
+		
 	sprite.play("idle")
 	cutting.stop()
 	timer.stop()
 	var jack_scene = preload("res://scenes/jack.tscn")
 	var jack_scene_instance = jack_scene.instantiate()
 	jack_scene_instance.global_position = Vector2(global_position.x - 15, global_position.y - 5)
-	get_parent().add_child(jack_scene_instance, true)
+	jack_spawn.add_child(jack_scene_instance, true)
 	jack_scene_instance.setType(type)
 	busy = false
 

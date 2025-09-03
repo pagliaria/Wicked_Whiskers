@@ -14,6 +14,7 @@ const SPIN_SPEED = 2000
 var current_item_in_range:RigidBody2D = null
 var current_held_item: RigidBody2D = null
 var current_cat_in_range: StaticBody2D = null
+var current_table_in_range: StaticBody2D = null
 var facingRight = true
 var target_node = null
 var throw_order = false
@@ -35,7 +36,8 @@ func _input(event):
 					play_sound.rpc(throw.get_path())
 					#target_node = OrderManager.remove_order(num)
 					#OrderManager.remove_order.rpc(num)
-					current_held_item.set_customer(target_node)
+					#current_held_item.set_customer(target_node)
+					current_held_item.set_player(self)
 					current_held_item.lock_rotation = false
 					throw_order = true
 		
@@ -47,6 +49,15 @@ func _input(event):
 				current_cat_in_range.carve.rpc()
 				delete_pumpkin.rpc(current_held_item.get_path())
 				current_cat_in_range = null
+				
+			elif current_held_item != null && current_table_in_range != null && current_table_in_range.name.contains("witch"):
+				current_held_item.add_hat.rpc(Enums.HatType.WITCH)
+			elif current_held_item != null && current_table_in_range != null && current_table_in_range.name.contains("cap"):
+				current_held_item.add_hat.rpc(Enums.HatType.CAP)
+			elif current_held_item != null && current_table_in_range != null && current_table_in_range.name.contains("sombraro"):
+				current_held_item.add_hat.rpc(Enums.HatType.SOMBRARO)
+			elif current_held_item != null && current_table_in_range != null && current_table_in_range.name.contains("cowboy"):
+				current_held_item.add_hat.rpc(Enums.HatType.COWBOY)
 				
 			elif current_item_in_range != null:
 				if current_item_in_range.can_pick_up():
@@ -80,6 +91,8 @@ func _input(event):
 
 func set_player_name(n:String):
 	player_name.text = n
+	if n.is_empty():
+		player_name.visible = false
 
 @rpc("any_peer", "call_local")
 func turn_in_order(node, order_number):
@@ -102,7 +115,8 @@ func change_mask(node, mask, enabled):
 
 @rpc("any_peer","call_local")
 func delete_pumpkin(path):
-	get_parent().get_node(path).queue_free()
+	if is_multiplayer_authority():
+		get_parent().get_node(path).queue_free()
 
 func get_input():
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -157,9 +171,11 @@ func _physics_process(_delta: float) -> void:
 		
 @rpc("any_peer","call_local")
 func move_pumpkin(node, x, y):
-	var obj = get_node(node)
-	obj.global_position.x = x
-	obj.global_position.y = y
+	if is_multiplayer_authority() && has_node(node):
+		var obj = get_node(node)
+		if obj != null:
+			obj.global_position.x = x
+			obj.global_position.y = y
 	
 @rpc("any_peer","call_local")	
 func throw_pumpkin(node, direction):
@@ -168,8 +184,12 @@ func throw_pumpkin(node, direction):
 	obj.apply_torque_impulse(SPIN_SPEED)
 	
 func _on_area_2d_area_entered(area: Area2D) -> void:
+	print("Entered: ", area.name)
+	
+	if area.name.contains("table"):
+		print("area ", area.get_parent().name)
+		current_table_in_range = area.get_parent()
 	if area.is_in_group("items"): # Assuming items are in an "items" group
-		print("area ", area.get_parent())
 		print("area ", area.get_parent().name)
 		current_item_in_range = area.get_parent()
 	if area.is_in_group("cats"): # Assuming items are in an "items" group
@@ -191,6 +211,8 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 		current_item_in_range = null
 	if area.get_parent() == current_cat_in_range:
 		current_cat_in_range = null
+	if area.get_parent() == current_table_in_range:
+		current_table_in_range = null
 
 func is_dead() -> bool:
 	return dead

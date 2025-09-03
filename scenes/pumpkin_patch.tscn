@@ -17,11 +17,17 @@ scale = Vector2(0.0968935, 0.0968935)
 texture = ExtResource("1_5dglq")
 script = ExtResource("2_w60p4")
 
+[node name="spwan_nodes" type="Node" parent="."]
+
 [node name="grow" type="Timer" parent="."]
 wait_time = 2.0
 autostart = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_w60p4")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://by2ickff22ej2")
+spawn_path = NodePath("../spwan_nodes")
 
 [connection signal="timeout" from="grow" to="." method="_on_grow_timeout"]

@@ -33,9 +33,6 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath("surprised:visible")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath("hat_image:visible")
-properties/6/spawn = true
-properties/6/replication_mode = 1
 
 [node name="jack" type="RigidBody2D"]
 script = ExtResource("1_wn71h")

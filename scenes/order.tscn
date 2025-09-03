@@ -1,11 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://30qc81oxrfv3"]
+[gd_scene load_steps=11 format=3 uid="uid://30qc81oxrfv3"]
 
 [ext_resource type="Script" uid="uid://bs2526osu8yht" path="res://scripts/order_display.gd" id="1_2k6rg"]
 [ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_somo4"]
 [ext_resource type="Texture2D" uid="uid://blb8odocb5per" path="res://assets/sprites/pumpkins/happy.png" id="2_2k6rg"]
 [ext_resource type="Texture2D" uid="uid://bpik15hp2cfs2" path="res://assets/sprites/ghost.png" id="3_somo4"]
-[ext_resource type="Texture2D" uid="uid://c2xuik3mcjjrv" path="res://assets/sprites/pumpkins/angry.png" id="4_wsyb0"]
+[ext_resource type="Texture2D" uid="uid://cvx2gmb6evj20" path="res://assets/sprites/pumpkins/angry.png" id="4_wsyb0"]
 [ext_resource type="Texture2D" uid="uid://dfgd3k0qj8mht" path="res://assets/sprites/pumpkins/surprised.png" id="5_wy35d"]
+[ext_resource type="Texture2D" uid="uid://dc55f03a7wvap" path="res://assets/sprites/hats/witch_hat.png" id="7_82rgs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_somo4"]
 bg_color = Color(0.366595, 0.366595, 0.366594, 1)
@@ -73,15 +74,13 @@ text = "?"
 
 [node name="happy" type="TextureRect" parent="Panel"]
 visible = false
-custom_minimum_size = Vector2(30, 30)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 58.0
-offset_top = 17.0
-offset_right = -22.0
-offset_bottom = -6.0
+offset_left = 56.0
+offset_top = 24.0
+offset_right = -18.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_2k6rg")
@@ -94,10 +93,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 58.0
-offset_top = 17.0
-offset_right = -22.0
-offset_bottom = -6.0
+offset_left = 54.0
+offset_top = 18.0
+offset_right = -16.0
+offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("4_wsyb0")
@@ -110,10 +109,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 58.0
-offset_top = 17.0
-offset_right = -22.0
-offset_bottom = -6.0
+offset_left = 54.0
+offset_top = 18.0
+offset_right = -16.0
+offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("5_wy35d")
@@ -143,3 +142,13 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_wsyb0")
 rounded = true
 fill_mode = 1
 show_percentage = false
+
+[node name="hat_image" type="TextureRect" parent="Panel"]
+visible = false
+layout_mode = 0
+offset_left = 56.0
+offset_top = 12.0
+offset_right = 82.0
+offset_bottom = 37.0
+texture = ExtResource("7_82rgs")
+expand_mode = 1

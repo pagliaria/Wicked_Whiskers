@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvx2gmb6evj20"
-path="res://.godot/imported/pumpkin4.png-6fca63984c07ca05c47a6d150203dc5e.ctex"
+uid="uid://c2xuik3mcjjrv"
+path="res://.godot/imported/angry_bak.png-336c18e4e14ace0d81b7a63f00dcaea4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pumpkins/pumpkin4.png"
-dest_files=["res://.godot/imported/pumpkin4.png-6fca63984c07ca05c47a6d150203dc5e.ctex"]
+source_file="res://assets/sprites/pumpkins/angry_bak.png"
+dest_files=["res://.godot/imported/angry_bak.png-336c18e4e14ace0d81b7a63f00dcaea4.ctex"]
 
 [params]
 

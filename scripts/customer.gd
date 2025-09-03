@@ -16,6 +16,7 @@ var problems = false
 var wrong_order = false
 var order_time = null
 var attacking = false
+var player:CharacterBody2D = null
 
 const ORDER_BUBBLE = preload("res://scenes/order_bubble.tscn")
 var bubble_scene_instance = null
@@ -53,7 +54,7 @@ func _process(_delta: float) -> void:
 				set_collision_mask_value(1, false)
 				attacking = true
 			else:
-				direction = global_position.direction_to(get_parent().get_parent().get_node("Player").global_position)
+				direction = global_position.direction_to(player.global_position)
 				play_directional_animation()
 
 	if hit_by_order && hit_item != null:
@@ -72,28 +73,43 @@ func generateOrder():
 	progress_bar.visible = true
 	order_time = Time.get_unix_time_from_system()
 	
-	var rand_int
+	var order_int
+	var hat_int
 	if Enums.get_night() == 1:
-		rand_int = 1
+		order_int = 1
 	if Enums.get_night() == 2:
-		rand_int = randi_range(1, 2)
+		order_int = randi_range(1, 2)
 	if Enums.get_night() == 3:
-		rand_int = randi_range(1, 3)
+		order_int = randi_range(1, 3)
 		
-	match rand_int:
+	hat_int = randi_range(1, 5)
+		
+	match order_int:
 		1:
-			order = Order.new(Enums.OrderType.HAPPY, self, order_time)
+			order = Order.new(Enums.HatType.NONE, Enums.OrderType.HAPPY, self, order_time)
 		2:
-			order = Order.new(Enums.OrderType.ANGRY, self, order_time)
+			order = Order.new(Enums.HatType.NONE, Enums.OrderType.ANGRY, self, order_time)
 		3:
-			order = Order.new(Enums.OrderType.SURPRISED, self, order_time)
-			
+			order = Order.new(Enums.HatType.NONE, Enums.OrderType.SURPRISED, self, order_time)
+	match hat_int:
+		1:
+			order.set_hat_type(Enums.HatType.NONE)
+		2:
+			order.set_hat_type(Enums.HatType.WITCH)
+		3:
+			order.set_hat_type(Enums.HatType.CAP)
+		4:
+			order.set_hat_type(Enums.HatType.COWBOY)
+		5:
+			order.set_hat_type(Enums.HatType.SOMBRARO)
+	
 	order_number = OrderManager.add_order(order)
 		
 	#TODO load different scenes for different orders or call scene and change icon
 	bubble_scene_instance = ORDER_BUBBLE.instantiate()
 	add_child(bubble_scene_instance)
 	bubble_scene_instance.set_type(order.get_order_type())
+	bubble_scene_instance.set_hat(order.get_order_hat())
 	ordered = true
 
 func _on_timer_timeout() -> void:
@@ -136,8 +152,9 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			diretion_timer.stop()			
 			hit_item = body
 			progress_bar.visible = false
-			if order.get_order_type() != body.getType():
+			if order.get_order_type() != body.getType() || order.get_order_hat() != body.get_hat():
 				problems = true
+				player = body.get_player()
 			else:
 				OrderManager.remove_order.rpc(order_number)
 				hit_by_order = true
