@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvx2gmb6evj20"
-path="res://.godot/imported/angry.png-e560b67d7a3de0540e8f548b39c54bbf.ctex"
+uid="uid://ct2wkknttmomt"
+path="res://.godot/imported/cap.png-4d1aee327527a56fc994c10f68a3a739.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pumpkins/angry.png"
-dest_files=["res://.godot/imported/angry.png-e560b67d7a3de0540e8f548b39c54bbf.ctex"]
+source_file="res://assets/sprites/hats/cap.png"
+dest_files=["res://.godot/imported/cap.png-4d1aee327527a56fc994c10f68a3a739.ctex"]
 
 [params]
 

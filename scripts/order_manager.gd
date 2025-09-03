@@ -17,6 +17,7 @@ func add_order(order: Order) -> int:
 			orders_display.add_child(order_instance)
 			order_instance.set_order_number(i)
 			order_instance.setType(order.get_order_type())
+			order_instance.set_hat(order.get_order_hat())
 			order_display[i] = order_instance
 			return i
 			
@@ -25,8 +26,9 @@ func add_order(order: Order) -> int:
 @rpc("any_peer","call_local")
 func remove_order(number: int):
 	orders.erase(number)
-	order_display[number].queue_free()
-	order_display.erase(number)
+	if order_display.has(number):
+		order_display[number].queue_free()
+		order_display.erase(number)
 
 func set_order_display(display: HBoxContainer):
 	orders_display = display

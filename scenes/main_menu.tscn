@@ -90,6 +90,15 @@ theme = ExtResource("4_rtw2f")
 theme_override_fonts/font = ExtResource("3_wu84c")
 text = "QUIT"
 
+[node name="single_player" type="Button" parent="CenterContainer/Panel"]
+offset_left = -160.0
+offset_top = -20.0
+offset_right = 108.0
+offset_bottom = 45.0
+theme = ExtResource("4_rtw2f")
+theme_override_fonts/font = ExtResource("3_wu84c")
+text = "SINGLE PLAYER"
+
 [node name="name_label" type="Label" parent="CenterContainer/Panel"]
 layout_mode = 0
 offset_left = 576.0
@@ -219,3 +228,4 @@ region_rect = Rect2(0, 0, 30.0599, 38.1794)
 [connection signal="pressed" from="CenterContainer/Panel/join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/single_player" to="." method="_on_single_player_pressed"]

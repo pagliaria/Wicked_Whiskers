@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://c5ikwbxtyioto"]
+
+[ext_resource type="Script" uid="uid://s5jpfe87v27c" path="res://scripts/hat_table.gd" id="1_vjjhj"]
+[ext_resource type="Texture2D" uid="uid://cfoakpjpldt1o" path="res://assets/sprites/table.png" id="2_myuwx"]
+[ext_resource type="Texture2D" uid="uid://dc55f03a7wvap" path="res://assets/sprites/hats/witch_hat.png" id="3_t5pwy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ct343"]
+size = Vector2(30, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kgp7e"]
+size = Vector2(18.5, 17.5)
+
+[node name="witch_hat_table" type="StaticBody2D"]
+script = ExtResource("1_vjjhj")
+
+[node name="Table" type="Sprite2D" parent="."]
+position = Vector2(14, -6)
+scale = Vector2(0.0306446, 0.0306446)
+texture = ExtResource("2_myuwx")
+offset = Vector2(-469.363, 291.946)
+
+[node name="WitchHat" type="Sprite2D" parent="."]
+position = Vector2(14, -6)
+scale = Vector2(0.0604167, 0.0604167)
+texture = ExtResource("3_t5pwy")
+offset = Vector2(-234.419, 55.8139)
+
+[node name="witch_hat_table_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="witch_hat_table_area"]
+position = Vector2(-1, 1.5)
+shape = SubResource("RectangleShape2D_ct343")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.25, 2.25)
+shape = SubResource("RectangleShape2D_kgp7e")
