@@ -34,6 +34,7 @@ func _ready() -> void:
 		add_child(current_player, true)
 		current_player.set_player_id(MultiplayerManager.Players[p].id)
 		current_player.set_player_name(MultiplayerManager.Players[p].name)
+		current_player.set_char_select(MultiplayerManager.Players[p].char)
 		
 		for spawn in get_tree().get_nodes_in_group("PlayerSpawnPoints"):
 			if spawn.name == str(index):
@@ -59,7 +60,7 @@ func _on_spawn_timer_timeout() -> void:
 	#customer_scene_instance.global_position = spwan_point.global_position
 	#add_child(customer_scene_instance, true)
 	customer_spwan_point.add_child(customer_scene_instance, true)
-	customer_scene_instance.set_playerd(found_nodes[int_rand])
+	customer_scene_instance.set_player(found_nodes[int_rand].get_path())
 	customer_scene_instance.global_position = customer_spwan_point.global_position
 
 func _process(_delta: float) -> void:
@@ -143,7 +144,7 @@ func new_night(d:int):
 			spawn_timer.start(8 - player_count)
 			
 			#Spawn pumpkin patches
-			add_pumpkin_patchs(player_count)
+			add_pumpkin_patchs(player_count+1)
 			#Spawn cats
 			cat_spawns.clear()
 			add_cats(ceil(float(player_count)/2), Enums.OrderType.HAPPY)
@@ -154,7 +155,7 @@ func new_night(d:int):
 			spawn_timer.start(6 - player_count)
 			
 			#Spawn pumpkin patches
-			add_pumpkin_patchs(player_count)
+			add_pumpkin_patchs(player_count+1)
 			#Spawn cats
 			cat_spawns.clear()
 			add_cats(ceil(float(player_count)/2), Enums.OrderType.HAPPY)
@@ -164,6 +165,9 @@ func new_night(d:int):
 func clean_up():
 	var children = pumpkin_spawn_locations.get_children()
 	for child in children:
+		if child.name.contains("patch"):
+			for pump in child.get_node("spawn_nodes").get_children():
+				pump.queue_free()
 		if is_instance_valid(child):
 			child.queue_free()
 			

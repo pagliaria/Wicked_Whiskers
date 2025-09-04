@@ -3,7 +3,7 @@ extends Sprite2D
 @onready var grow: Timer = $grow
 const PUMPKIN = preload("res://scenes/pumpkin.tscn")
 var current_pumpkin = null
-@onready var spwan_nodes: Node = $spwan_nodes
+@onready var spawn_nodes: Node = $spawn_nodes
 
 enum GrowState {
 	SEED,
@@ -33,7 +33,7 @@ func grow_pumpkin():
 			print("instance: ", current_pumpkin.name)
 			current_pumpkin.global_position.x = global_position.x
 			current_pumpkin.global_position.y = global_position.y + 1
-			spwan_nodes.add_child(current_pumpkin, true)
+			spawn_nodes.add_child(current_pumpkin, true)
 			current_pumpkin.attach_patch.rpc(self.get_path())
 			current_pumpkin.get_node("pumpkin_good").scale *= .33
 		GrowState.PARTIAL:

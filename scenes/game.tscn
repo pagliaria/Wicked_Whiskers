@@ -5387,6 +5387,7 @@ position = Vector2(101, 7)
 position = Vector2(40, -29)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+process_mode = 4
 replication_config = SubResource("SceneReplicationConfig_dinhu")
 
 [node name="CustomerMultiSpawner" type="MultiplayerSpawner" parent="."]

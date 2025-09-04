@@ -75,5 +75,6 @@ func get_hat() -> Enums.HatType:
 func get_player() -> CharacterBody2D:
 	return player
 
-func set_player(p: CharacterBody2D):
-	player = p
+@rpc("any_peer","call_local")
+func set_player(node: String):
+	player = get_node(node)

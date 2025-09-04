@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0r6hq80teod1"
-path="res://.godot/imported/knight.png-7c67c83d34932624952797d9e971a644.ctex"
+uid="uid://b8ctgxqbmu3oy"
+path="res://.godot/imported/witch-001-SWEN.png-3d5da6bf1c55e3ff54413a789a9d4b41.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/knight.png"
-dest_files=["res://.godot/imported/knight.png-7c67c83d34932624952797d9e971a644.ctex"]
+source_file="res://assets/sprites/characters/witch-001-SWEN.png"
+dest_files=["res://.godot/imported/witch-001-SWEN.png-3d5da6bf1c55e3ff54413a789a9d4b41.ctex"]
 
 [params]
 
