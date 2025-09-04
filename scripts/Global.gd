@@ -2,6 +2,7 @@ extends Node
 
 var night = 1
 var night_time_sec = 180
+#var night_time_sec = 10
 var ORDER_TIMEOUT_SEC = 30
 
 var night_passed = false
@@ -19,6 +20,12 @@ enum OrderType {
 	HAPPY,
 	ANGRY,
 	SURPRISED
+}
+
+enum CharSelection {
+	KNIGHT,
+	WITCH,
+	BLUE_WITCH
 }
 
 func get_night() -> int:

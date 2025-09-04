@@ -20,6 +20,9 @@ var target_node = null
 var throw_order = false
 var dead = false
 var player_id
+var char_select:Enums.CharSelection = Enums.CharSelection.KNIGHT
+var idle_string = "moving"
+var moving_string = "idle"
 
 func _input(event):
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -37,7 +40,8 @@ func _input(event):
 					#target_node = OrderManager.remove_order(num)
 					#OrderManager.remove_order.rpc(num)
 					#current_held_item.set_customer(target_node)
-					current_held_item.set_player(self)
+					current_held_item.set_player.rpc(self.get_path())
+					#current_held_item.set_player(self)
 					current_held_item.lock_rotation = false
 					throw_order = true
 		
@@ -89,6 +93,10 @@ func _input(event):
 				#current_held_item.death()
 				current_held_item = null
 
+#@rpc("any_peer","call_local")
+#func set_player(node: String):
+	#current_held_item.set_player(get_node(node))
+
 func set_player_name(n:String):
 	player_name.text = n
 	if n.is_empty():
@@ -129,15 +137,15 @@ func get_input():
 		if velocity.x > 0:
 			sprite.flip_h = false # Face right
 			facingRight = true
-			sprite.play("moving")
+			sprite.play(moving_string)
 		elif velocity.x < 0:
 			sprite.flip_h = true  # Face left
 			facingRight = false
-			sprite.play("moving")
+			sprite.play(moving_string)
 		elif velocity.y < 0 || velocity.y > 0:
-			sprite.play("moving")
+			sprite.play(moving_string)
 		else:
-			sprite.pause()
+			sprite.play(idle_string)
 		
 func _physics_process(_delta: float) -> void:
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -198,7 +206,8 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		
 	if area.name == "ghost_body":
 		dead = true
-		sprite.play("death")
+		#sprite.play("death")
+		sprite.stop()
 		print("dead!")
 		death_timer.start(3)
 		
@@ -224,3 +233,21 @@ func _on_death_timer_timeout() -> void:
 func set_player_id(id):
 	player_id = id
 	multiplayer_synchronizer.set_multiplayer_authority(id)
+
+func set_char_select(c: Enums.CharSelection):
+	char_select = c
+	
+	match char_select:
+		Enums.CharSelection.KNIGHT:
+			idle_string = "idle"
+			moving_string = "moving"
+		Enums.CharSelection.WITCH:
+			idle_string = "witch_idle"
+			moving_string = "witch_moving"
+			sprite.scale.x = .4
+			sprite.scale.y = .4
+		Enums.CharSelection.BLUE_WITCH:
+			idle_string = "blue_witch_idle"
+			moving_string = "blue_witch_moving"
+			sprite.scale.x = .4
+			sprite.scale.y = .4

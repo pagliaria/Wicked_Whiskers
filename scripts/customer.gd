@@ -11,6 +11,7 @@ var animation: AnimatedSprite2D = null
 @onready var smack: AudioStreamPlayer2D = $smack
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var scream: AudioStreamPlayer2D = $scream
+@onready var order_bubble: Sprite2D = $order_bubble
 
 var problems = false
 var wrong_order = false
@@ -27,8 +28,12 @@ var hit_item: RigidBody2D = null
 var order_number = 0
 var order: Order = null
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	
+	if !is_multiplayer_authority():
+		return
 	
 	if !ordered && ray_cast_right.is_colliding():
 		diretion_timer.start()
@@ -38,8 +43,8 @@ func _process(_delta: float) -> void:
 	if ordered:
 		progress_bar.value = ((Time.get_unix_time_from_system() - order_time) / Enums.ORDER_TIMEOUT_SEC) * 100
 		#print("progress: ", progress_bar.value)
-		bubble_scene_instance.global_position.x = global_position.x + 20
-		bubble_scene_instance.global_position.y =global_position.y - 30
+		#bubble_scene_instance.global_position.x = global_position.x + 20
+		#bubble_scene_instance.global_position.y =global_position.y - 30
 		
 		if progress_bar.value >= 100 || wrong_order:
 			#problems!
@@ -70,7 +75,7 @@ func _process(_delta: float) -> void:
 
 func generateOrder():
 	print("order")
-	progress_bar.visible = true
+	#progress_bar.visible = true
 	order_time = Time.get_unix_time_from_system()
 	
 	var order_int
@@ -83,34 +88,46 @@ func generateOrder():
 		order_int = randi_range(1, 3)
 		
 	hat_int = randi_range(1, 5)
-		
-	match order_int:
-		1:
-			order = Order.new(Enums.HatType.NONE, Enums.OrderType.HAPPY, self, order_time)
-		2:
-			order = Order.new(Enums.HatType.NONE, Enums.OrderType.ANGRY, self, order_time)
-		3:
-			order = Order.new(Enums.HatType.NONE, Enums.OrderType.SURPRISED, self, order_time)
+	print("order: ", order_int, " ", hat_int)
+	var hat_type
 	match hat_int:
 		1:
-			order.set_hat_type(Enums.HatType.NONE)
+			hat_type = Enums.HatType.NONE
 		2:
-			order.set_hat_type(Enums.HatType.WITCH)
+			hat_type = Enums.HatType.WITCH
 		3:
-			order.set_hat_type(Enums.HatType.CAP)
+			hat_type = Enums.HatType.CAP
 		4:
-			order.set_hat_type(Enums.HatType.COWBOY)
+			hat_type = Enums.HatType.COWBOY
 		5:
-			order.set_hat_type(Enums.HatType.SOMBRARO)
+			hat_type = Enums.HatType.SOMBRARO
 	
-	order_number = OrderManager.add_order(order)
+	match order_int:
+		1:
+			add_order.rpc(hat_type, Enums.OrderType.HAPPY, self.get_path(), order_time)
+		2:
+			add_order.rpc(hat_type, Enums.OrderType.ANGRY, self.get_path(), order_time)
+		3:
+			add_order.rpc(hat_type, Enums.OrderType.SURPRISED, self.get_path(), order_time)
+	
+	#order_number = OrderManager.add_order(order)
 		
-	#TODO load different scenes for different orders or call scene and change icon
-	bubble_scene_instance = ORDER_BUBBLE.instantiate()
-	add_child(bubble_scene_instance)
-	bubble_scene_instance.set_type(order.get_order_type())
-	bubble_scene_instance.set_hat(order.get_order_hat())
+	#bubble_scene_instance = ORDER_BUBBLE.instantiate()
+	#add_child(bubble_scene_instance)
+	#bubble_scene_instance.set_type(order.get_order_type())
+	#bubble_scene_instance.set_hat(order.get_order_hat())
+	#ordered = true
+
+@rpc("any_peer","call_local")
+func add_order(ht:Enums.HatType, it: Enums.OrderType, cust_path: String, time: float):
+	order_time = time
+	order = Order.new(ht, it, get_node(cust_path), time)
+	order_number = OrderManager.add_order(order)
+	order_bubble.visible = true
+	order_bubble.set_type(order.get_order_type())
+	order_bubble.set_hat(order.get_order_hat())
 	ordered = true
+	progress_bar.visible = true
 
 func _on_timer_timeout() -> void:
 	direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
@@ -123,7 +140,6 @@ func _on_timer_timeout() -> void:
 		speed = 0
 		animation.stop()
 
-@rpc("any_peer","call_local")
 func play_directional_animation():
 	var direction_id = int(round(direction.angle() / TAU * DIR_4.size()))
 	#print("direction: ", direction_id)
@@ -154,11 +170,12 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			progress_bar.visible = false
 			if order.get_order_type() != body.getType() || order.get_order_hat() != body.get_hat():
 				problems = true
+				#set_player.rpc(body.get_player().get_path())
 				player = body.get_player()
 			else:
 				OrderManager.remove_order.rpc(order_number)
 				hit_by_order = true
-				bubble_scene_instance.visible = false
+				order_bubble.visible = false
 				problems = false
 			remove_timer.start(1)
 
@@ -172,5 +189,6 @@ func _on_remove_timer_timeout() -> void:
 		if is_multiplayer_authority():
 			queue_free()
 
-func set_player(p: CharacterBody2D):
-	player = p
+@rpc("any_peer","call_local")
+func set_player(p: String):
+	player = get_node(p)
