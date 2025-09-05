@@ -21,8 +21,8 @@ var throw_order = false
 var dead = false
 var player_id
 var char_select:Enums.CharSelection = Enums.CharSelection.KNIGHT
-var idle_string = "moving"
-var moving_string = "idle"
+var idle_string = "idle"
+var moving_string = "moving"
 
 func _input(event):
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -137,15 +137,24 @@ func get_input():
 		if velocity.x > 0:
 			sprite.flip_h = false # Face right
 			facingRight = true
-			sprite.play(moving_string)
+			play_sprite.rpc(sprite.get_path(), true, moving_string)
+			#sprite.play(moving_string)
 		elif velocity.x < 0:
 			sprite.flip_h = true  # Face left
 			facingRight = false
-			sprite.play(moving_string)
+			play_sprite.rpc(sprite.get_path(), true, moving_string)
 		elif velocity.y < 0 || velocity.y > 0:
-			sprite.play(moving_string)
+			play_sprite.rpc(sprite.get_path(), true, moving_string)
 		else:
-			sprite.play(idle_string)
+			play_sprite.rpc(sprite.get_path(), true, idle_string)
+			#sprite.play(idle_string)
+		
+@rpc("any_peer","call_local")
+func play_sprite(path, play, animation):
+	if play:
+		get_node(path).play(animation)
+	else:
+		get_node(path).stop()
 		
 func _physics_process(_delta: float) -> void:
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -236,6 +245,8 @@ func set_player_id(id):
 
 func set_char_select(c: Enums.CharSelection):
 	char_select = c
+	
+	print("Char set to: ", c)
 	
 	match char_select:
 		Enums.CharSelection.KNIGHT:
