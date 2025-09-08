@@ -178,6 +178,8 @@ properties/6/replication_mode = 1
 
 [node name="customer" type="CharacterBody2D"]
 z_index = 5
+collision_layer = 129
+collision_mask = 129
 script = ExtResource("1_xss0h")
 
 [node name="order_bubble" parent="." instance=ExtResource("2_qqxhk")]
@@ -201,8 +203,8 @@ wait_time = 2.0
 target_position = Vector2(17, 0)
 
 [node name="ghost_body" type="Area2D" parent="."]
-collision_layer = 513
-collision_mask = 512
+collision_layer = 641
+collision_mask = 640
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ghost_body"]
 shape = SubResource("CircleShape2D_xss0h")

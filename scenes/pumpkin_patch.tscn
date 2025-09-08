@@ -20,7 +20,6 @@ script = ExtResource("2_w60p4")
 [node name="spawn_nodes" type="Node" parent="."]
 
 [node name="grow" type="Timer" parent="."]
-wait_time = 2.0
 autostart = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

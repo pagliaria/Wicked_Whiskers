@@ -11,6 +11,8 @@ extends Control
 const KNIGHT = preload("res://assets/sprites/characters/knight.png")
 const WITCH_001_SWEN = preload("res://assets/sprites/characters/witch-001-SWEN.png")
 const WITCH_002_SWEN = preload("res://assets/sprites/characters/witch-002-SWEN.png")
+const SKELETON = preload("res://assets/sprites/characters/elder_skeleton-SWEN.png")
+@onready var single_player: Button = $CenterContainer/Panel/single_player
 
 var char_select = Enums.CharSelection.KNIGHT
 var players = {}
@@ -73,6 +75,9 @@ func _on_start_pressed() -> void:
 	start_game.rpc()
 
 func _on_host_pressed() -> void:
+	
+	single_player.disabled = true
+	
 	peer = ENetMultiplayerPeer.new()
 	
 	var error = peer.create_server(port, 4)
@@ -134,5 +139,10 @@ func set_character(sprite: Sprite2D, c:Enums.CharSelection):
 		Enums.CharSelection.BLUE_WITCH:
 			sprite.texture = WITCH_002_SWEN
 			sprite.region_rect = Rect2(97, 76, 47, 55)
+			sprite.scale.x = 1.5
+			sprite.scale.y = 1.5
+		Enums.CharSelection.SKELETON:
+			sprite.texture = SKELETON
+			sprite.region_rect = Rect2(48, 2, 46, 66)
 			sprite.scale.x = 1.5
 			sprite.scale.y = 1.5

@@ -29,7 +29,9 @@ func attach_patch(path):
 
 func picked_up():
 	#print("picked up")
-	grow_patch.on_picked.rpc()
+	if grow_patch != null:
+		grow_patch.on_picked.rpc()
+		grow_patch = null
 
 func getType() -> Enums.OrderType:
 	return Enums.OrderType.INVALID

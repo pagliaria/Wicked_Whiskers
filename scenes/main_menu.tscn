@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c2sjg0nswhljq"]
+[gd_scene load_steps=9 format=3 uid="uid://c2sjg0nswhljq"]
 
 [ext_resource type="Script" uid="uid://boekvosxlovan" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="PackedScene" uid="uid://ca0i1oa70m5ki" path="res://scenes/game.tscn" id="2_ekxnf"]
@@ -7,6 +7,7 @@
 [ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="3_wu84c"]
 [ext_resource type="Theme" uid="uid://b6gmj4detc7k4" path="res://themes/input.tres" id="4_oa1go"]
 [ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="4_rtw2f"]
+[ext_resource type="Texture2D" uid="uid://chl2c2wmk2wy4" path="res://assets/sprites/characters/elder_skeleton-SWEN.png" id="8_tbmy8"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -168,10 +169,10 @@ horizontal_alignment = 1
 
 [node name="TextureRect" type="Sprite2D" parent="CenterContainer/Panel/player2"]
 position = Vector2(64, 72)
-scale = Vector2(3.16667, 3.16667)
-texture = ExtResource("3_bqqt6")
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("8_tbmy8")
 region_enabled = true
-region_rect = Rect2(0, 0, 30.0599, 38.1794)
+region_rect = Rect2(48, 2, 46, 66)
 
 [node name="player3" type="VBoxContainer" parent="CenterContainer/Panel" groups=["player_spots"]]
 visible = false

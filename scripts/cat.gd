@@ -45,17 +45,16 @@ func set_type(t: Enums.OrderType):
 		animated_sprite_2d.modulate = Color(0, 1, 0, 1)
 	
 func _on_timer_timeout() -> void:
-	if !is_multiplayer_authority():
-		return
+	if is_multiplayer_authority():
+		var jack_scene = preload("res://scenes/jack.tscn")
+		var jack_scene_instance = jack_scene.instantiate()
+		jack_scene_instance.global_position = Vector2(global_position.x - 15, global_position.y - 5)
+		jack_spawn.add_child(jack_scene_instance, true)
+		jack_scene_instance.setType(type)
 		
 	sprite.play("idle")
 	cutting.stop()
 	timer.stop()
-	var jack_scene = preload("res://scenes/jack.tscn")
-	var jack_scene_instance = jack_scene.instantiate()
-	jack_scene_instance.global_position = Vector2(global_position.x - 15, global_position.y - 5)
-	jack_spawn.add_child(jack_scene_instance, true)
-	jack_scene_instance.setType(type)
 	busy = false
 
 func is_busy() -> bool:

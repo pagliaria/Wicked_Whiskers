@@ -4,6 +4,8 @@ var night = 1
 var night_time_sec = 180
 #var night_time_sec = 10
 var ORDER_TIMEOUT_SEC = 30
+var coins = 0
+var coin_counter_pos
 
 var night_passed = false
 
@@ -25,7 +27,8 @@ enum OrderType {
 enum CharSelection {
 	KNIGHT,
 	WITCH,
-	BLUE_WITCH
+	BLUE_WITCH,
+	SKELETON
 }
 
 func get_night() -> int:

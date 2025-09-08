@@ -5,6 +5,7 @@ var rotation_modifier = 0
 var direction = Vector2(1, 0) # Start moving right
 const DIR_4 = [Vector2.LEFT,Vector2.UP,Vector2.RIGHT,Vector2.DOWN]
 var animation: AnimatedSprite2D = null
+const COIN = preload("res://scenes/coin.tscn")
 @onready var ray_cast_right: RayCast2D = $RayCastRight
 @onready var diretion_timer: Timer = $diretionTimer
 @onready var remove_timer: Timer = $remove_timer
@@ -27,7 +28,7 @@ var hit_by_order = false
 var hit_item: RigidBody2D = null
 var order_number = 0
 var order: Order = null
-
+var dog = null
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -49,7 +50,7 @@ func _process(_delta: float) -> void:
 		if progress_bar.value >= 100 || wrong_order:
 			#problems!
 			if !attacking:
-				scream.play()
+				play_sound.rpc(scream.get_path())
 				animation.modulate = Color(1, 0, 0, 0.8)
 				progress_bar.visible = false
 				#bubble_scene_instance.visible = false
@@ -71,7 +72,8 @@ func _process(_delta: float) -> void:
 		rotation = rotation_modifier
 		velocity = direction * speed
 
-	move_and_slide()
+	if dog == null:
+		move_and_slide()
 
 func generateOrder():
 	print("order")
@@ -131,7 +133,6 @@ func add_order(ht:Enums.HatType, it: Enums.OrderType, cust_path: String, time: f
 
 func _on_timer_timeout() -> void:
 	direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
-	
 	play_directional_animation()
 
 	if randi_range(0, 1) == 1:
@@ -158,12 +159,23 @@ func _on_ready() -> void:
 	animation.play("walk_right")
 	
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	#if !hit_by_order && body.name.contains("jack"):
+	if body.name.contains("hell_dog"):
+		dog = body
+		print("DOG GOT ME!")
+		body.killing()
+		OrderManager.remove_order.rpc(order_number)
+		hit_by_order = true
+		order_bubble.visible = false
+		problems = false
+		remove_timer.start(2)
+		speed = 0
+		animation.rotation += deg_to_rad(90)
+	
 	if !hit_by_order && body.is_in_group("items"):
 		#var jack = body as RigidBody2D
 		#print("Entered customer: ", body.name, order_number, jack.get_order_number())
 		if body.get_order_number() == order_number:
-			smack.play()
+			play_sound.rpc(smack.get_path())
 			print("Entered customer: ", body.name)
 			diretion_timer.stop()			
 			hit_item = body
@@ -173,13 +185,29 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				#set_player.rpc(body.get_player().get_path())
 				player = body.get_player()
 			else:
+				if is_multiplayer_authority():
+					var i = randi_range(3,10)
+					spawn_coins.rpc(i)
 				OrderManager.remove_order.rpc(order_number)
 				hit_by_order = true
 				order_bubble.visible = false
 				problems = false
 			remove_timer.start(1)
 
+@rpc("any_peer","call_local")
+func play_sound(node):
+	get_node(node).play()
+
+@rpc("any_peer","call_local")
+func spawn_coins(i):
+	for c in i:
+		var coin_instance = COIN.instantiate()
+		get_parent().add_child(coin_instance)
+		coin_instance.spawn_coin(self.global_position)
+
 func _on_remove_timer_timeout() -> void:
+	if dog != null:
+		dog.deactivate()
 	remove_timer.stop()
 	if hit_item != null:
 		hit_item.queue_free()
@@ -192,3 +220,6 @@ func _on_remove_timer_timeout() -> void:
 @rpc("any_peer","call_local")
 func set_player(p: String):
 	player = get_node(p)
+
+func is_attacking():
+	return attacking
