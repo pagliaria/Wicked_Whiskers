@@ -17,6 +17,10 @@ extends Node2D
 @onready var customer_spwan_point: Node2D = $customer_spwan_point
 @onready var pumpkin_spawn_locations: Node = $pumpkin_spawn_locations
 @onready var cat_spawn_locations: Node = $cat_spawn_locations
+@onready var coins_amount: Label = $coins_amount
+@onready var coin_end: Node2D = $coin_end
+@onready var hell_dog: CharacterBody2D = $hell_dog
+@onready var dog_house: StaticBody2D = $dog_house
 
 var cat_spawns = []
 var orderTime
@@ -24,8 +28,11 @@ var night_start_time
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	dog_house.set_dog(hell_dog)
+	hell_dog.set_customer_spawn_point(customer_spwan_point)
 	OrderManager.set_order_display($orders/MarginContainer/orders_display)
 	night_start_time = Time.get_unix_time_from_system()
+	Enums.coin_counter_pos = coin_end.global_position
 	
 	#add players
 	var index = 0
@@ -40,7 +47,7 @@ func _ready() -> void:
 			if spawn.name == str(index):
 				current_player.global_position = spawn.global_position
 		index += 1
-		
+	
 	new_night(Enums.get_night())
 
 func _on_spawn_timer_timeout() -> void:
@@ -65,6 +72,8 @@ func _on_spawn_timer_timeout() -> void:
 
 func _process(_delta: float) -> void:
 	progress_bar.value = ((Time.get_unix_time_from_system() - night_start_time) / Enums.get_night_time()) * 100
+	
+	coins_amount.text = str(Enums.coins)
 	
 	if progress_bar.value == 100:
 		Enums.set_passed(true)

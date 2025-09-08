@@ -15,6 +15,7 @@ var current_item_in_range:RigidBody2D = null
 var current_held_item: RigidBody2D = null
 var current_cat_in_range: StaticBody2D = null
 var current_table_in_range: StaticBody2D = null
+var current_dog_house_in_range: StaticBody2D = null
 var facingRight = true
 var target_node = null
 var throw_order = false
@@ -49,11 +50,13 @@ func _input(event):
 			if current_cat_in_range != null && current_held_item != null && !current_held_item.name.contains("jack") && !current_cat_in_range.is_busy():
 				# give pumpkin to cat
 				print("gave pumpkin to cat!")
-				squish.play()
+				play_sound.rpc(squish.get_path())
 				current_cat_in_range.carve.rpc()
 				delete_pumpkin.rpc(current_held_item.get_path())
 				current_cat_in_range = null
-				
+			elif current_dog_house_in_range != null && current_dog_house_in_range.get_cost() <= Enums.coins && !current_dog_house_in_range.get_dog().is_active():
+				Enums.coins -= current_dog_house_in_range.get_cost()
+				current_dog_house_in_range.activate_dog()
 			elif current_held_item != null && current_table_in_range != null && current_table_in_range.name.contains("witch"):
 				current_held_item.add_hat.rpc(Enums.HatType.WITCH)
 			elif current_held_item != null && current_table_in_range != null && current_table_in_range.name.contains("cap"):
@@ -109,6 +112,7 @@ func turn_in_order(node, order_number):
 
 @rpc("any_peer","call_local")
 func play_sound(node):
+	#print("squish! ", node)
 	get_node(node).play()
 
 @rpc("any_peer","call_local")
@@ -204,13 +208,16 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	print("Entered: ", area.name)
 	
 	if area.name.contains("table"):
-		print("area ", area.get_parent().name)
+		print("saved area ", area.get_parent().name)
 		current_table_in_range = area.get_parent()
+	if area.name.contains("dog_house"):
+		print("saved area ", area.get_parent().name)
+		current_dog_house_in_range = area.get_parent()
 	if area.is_in_group("items"): # Assuming items are in an "items" group
-		print("area ", area.get_parent().name)
+		print("saved area ", area.get_parent().name)
 		current_item_in_range = area.get_parent()
 	if area.is_in_group("cats"): # Assuming items are in an "items" group
-		print("area " + area.get_parent().name)
+		print("saved area " + area.get_parent().name)
 		current_cat_in_range = area.get_parent()
 		
 	if area.name == "ghost_body":
@@ -226,11 +233,17 @@ func display_restart():
 
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.get_parent() == current_item_in_range:
+		print("removed area " + area.get_parent().name)
 		current_item_in_range = null
 	if area.get_parent() == current_cat_in_range:
+		print("removed area " + area.get_parent().name)
 		current_cat_in_range = null
 	if area.get_parent() == current_table_in_range:
+		print("removed area " + area.get_parent().name)
 		current_table_in_range = null
+	if area.get_parent() == current_dog_house_in_range:
+		print("removed area " + area.get_parent().name)
+		current_dog_house_in_range = null
 
 func is_dead() -> bool:
 	return dead
@@ -262,3 +275,9 @@ func set_char_select(c: Enums.CharSelection):
 			moving_string = "blue_witch_moving"
 			sprite.scale.x = .4
 			sprite.scale.y = .4
+		Enums.CharSelection.SKELETON:
+			idle_string = "skeleton_idle"
+			moving_string = "skeleton_moving"
+			sprite.scale.x = .3
+			sprite.scale.y = .3
+			sprite.position.y = -10
