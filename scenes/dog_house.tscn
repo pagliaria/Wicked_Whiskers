@@ -45,7 +45,7 @@ texture = ExtResource("3_pxr23")
 region_enabled = true
 region_rect = Rect2(97.485, 0.5, 13.4, 16)
 
-[node name="night" type="Label" parent="."]
+[node name="cost" type="Label" parent="."]
 offset_left = -2.0
 offset_top = -26.0
 offset_right = 17.0
@@ -56,3 +56,5 @@ text = "10"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 1
+
+[connection signal="ready" from="." to="." method="_on_ready"]

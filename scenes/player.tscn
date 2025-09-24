@@ -379,7 +379,7 @@ script = ExtResource("1_g2els")
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"skeleton_idle"
-frame_progress = 0.988456
+frame_progress = 0.674898
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)
