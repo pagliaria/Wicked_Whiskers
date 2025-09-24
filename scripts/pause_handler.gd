@@ -32,6 +32,7 @@ func reset():
 		print("restart!")
 		get_tree().reload_current_scene()
 		OrderManager.clear_all_orders()
+		Enums.coins = 0
 
 @rpc("any_peer","call_local")
 func next_day():
