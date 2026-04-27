@@ -2,6 +2,7 @@ extends Control
 
 @export var game: PackedScene
 @export var how_to_play_scene: PackedScene
+@export var difficulty_select_scene: PackedScene
 @export var address = "147.185.221.31"
 @export var join_port = 38507
 @export var port = 10537
@@ -18,6 +19,8 @@ const SKELETON = preload("res://assets/sprites/characters/elder_skeleton-SWEN.pn
 var char_select = Enums.CharSelection.KNIGHT
 var players = {}
 var peer
+# Track whether the pending start is for single player or multiplayer
+var _pending_single_player = false
 
 func _ready() -> void:
 	multiplayer.peer_connected.connect(peer_connected)
@@ -68,26 +71,38 @@ func connection_failed():
 
 @rpc("any_peer", "call_local")
 func start_game():
-	#get_tree().root.add_child(game.instantiate())
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
 	self.hide()
 
+func _show_difficulty_popup(single_player_mode: bool) -> void:
+	_pending_single_player = single_player_mode
+	var popup = difficulty_select_scene.instantiate()
+	get_tree().root.add_child(popup)
+	popup.difficulty_chosen.connect(_on_difficulty_chosen)
+
+func _on_difficulty_chosen() -> void:
+	if _pending_single_player:
+		MultiplayerManager.Players[1] = {
+			"name" : my_name.text,
+			"id" : 1,
+			"char" : char_select
+		}
+		start_game()
+	else:
+		start_game.rpc()
+
 func _on_start_pressed() -> void:
-	start_game.rpc()
+	_show_difficulty_popup(false)
 
 func _on_host_pressed() -> void:
-	
 	single_player.disabled = true
 	
 	peer = ENetMultiplayerPeer.new()
-	
 	var error = peer.create_server(port, 4)
-	
 	if error != OK:
 		print("cannt connect: ", error)
 		return
 	peer.host.compress(ENetConnection.COMPRESS_RANGE_CODER)
-	
 	multiplayer.multiplayer_peer = peer
 	
 	print("waiting for players...")
@@ -99,7 +114,6 @@ func _on_join_pressed() -> void:
 	peer = ENetMultiplayerPeer.new()
 	peer.create_client(address, join_port)
 	peer.host.compress(ENetConnection.COMPRESS_RANGE_CODER)
-	
 	multiplayer.multiplayer_peer = peer
 
 func _on_quit_pressed() -> void:
@@ -110,25 +124,16 @@ func _on_how_to_play_pressed() -> void:
 	get_tree().root.add_child(htp)
 
 func _on_single_player_pressed() -> void:
-	MultiplayerManager.Players[1] = {
-			"name" : my_name.text,
-			"id" : 1,
-			"char" : char_select
-		}
-	start_game()
-
+	_show_difficulty_popup(true)
 
 func _on_change_char_pressed() -> void:
-	
 	var char_size = Enums.CharSelection.size()
-	
 	char_select += 1
 	if char_select > char_size - 1:
 		char_select = 0
-
 	set_character(char_select_image, char_select)
 
-func set_character(sprite: Sprite2D, c:Enums.CharSelection):
+func set_character(sprite: Sprite2D, c: Enums.CharSelection):
 	match c:
 		Enums.CharSelection.KNIGHT:
 			sprite.texture = KNIGHT

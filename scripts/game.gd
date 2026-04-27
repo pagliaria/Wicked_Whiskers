@@ -26,7 +26,6 @@ var cat_spawns = []
 var orderTime
 var night_start_time
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	dog_house.set_dog(hell_dog)
 	hell_dog.set_customer_spawn_point(customer_spwan_point)
@@ -34,7 +33,6 @@ func _ready() -> void:
 	night_start_time = Time.get_unix_time_from_system()
 	Enums.coin_counter_pos = coin_end.global_position
 	
-	#add players
 	var index = 0
 	for p in MultiplayerManager.Players:
 		var current_player = player_scene.instantiate()
@@ -54,31 +52,27 @@ func _on_spawn_timer_timeout() -> void:
 	if !is_multiplayer_authority():
 		return
 	
-	var int_rand = randi_range(0, MultiplayerManager.Players.size()-1) 	
+	var int_rand = randi_range(0, MultiplayerManager.Players.size()-1)
 	var found_nodes: Array[CharacterBody2D] = []
 
 	for child in get_children():
-		# Check if the child is a Label or a node with a 'text' property
 		if child is CharacterBody2D:
 			if child.name.contains("Player"):
 				found_nodes.append(child)
 		
 	var customer_scene_instance = customer.instantiate()
-	#customer_scene_instance.global_position = spwan_point.global_position
-	#add_child(customer_scene_instance, true)
 	customer_spwan_point.add_child(customer_scene_instance, true)
 	customer_scene_instance.set_player(found_nodes[int_rand].get_path())
 	customer_scene_instance.global_position = customer_spwan_point.global_position
 
 func _process(_delta: float) -> void:
 	progress_bar.value = ((Time.get_unix_time_from_system() - night_start_time) / Enums.get_night_time()) * 100
-	
 	coins_amount.text = str(Enums.coins)
 	
 	if progress_bar.value == 100:
 		Enums.set_passed(true)
 		day_end()
-		
+
 func day_end():
 	print("new day!")
 	spawn_timer.stop()
@@ -94,12 +88,11 @@ func day_end():
 		
 	get_tree().paused = true
 
-func add_cats(n: int, type:Enums.OrderType):
+func add_cats(n: int, type: Enums.OrderType):
 	if !is_multiplayer_authority():
 		return
 		
 	var spawns = []
-	
 	for i in n:
 		var rand = randi_range(0, 10)
 		while cat_spawns.has(rand):
@@ -109,14 +102,13 @@ func add_cats(n: int, type:Enums.OrderType):
 	print("cat locations: ", spawns)
 	
 	for location in spawns:
-		var cat_scene:Node2D = cat.instantiate()
+		var cat_scene: Node2D = cat.instantiate()
 		cat_spawn_locations.add_child(cat_scene, true)
 		cat_scene.set_type.rpc(type)
-		var position_node =  cat_spawn_locations.get_node(str(location))
+		var position_node = cat_spawn_locations.get_node(str(location))
 		cat_scene.global_position = position_node.global_position
-		
-# Generate patches. cant do more than there are spawn locations in "pumpkin_spawn_locations"
-func add_pumpkin_patchs(n:int):
+
+func add_pumpkin_patchs(n: int):
 	if !is_multiplayer_authority():
 		return
 		
@@ -129,47 +121,34 @@ func add_pumpkin_patchs(n:int):
 	print("patch locations: ", spawns)
 	
 	for location in spawns:
-		var patch_scene:Node2D = patch.instantiate()
+		var patch_scene: Node2D = patch.instantiate()
 		pumpkin_spawn_locations.add_child(patch_scene, true)
-		var position_node =  pumpkin_spawn_locations.get_node(str(location))
+		var position_node = pumpkin_spawn_locations.get_node(str(location))
 		patch_scene.global_position = position_node.global_position
 
-func new_night(d:int):
+func new_night(d: int):
 	night.text = "Night " + str(Enums.get_night())
 	var player_count = MultiplayerManager.Players.size()
-	match d:
-		1:			
-			Enums.ORDER_TIMEOUT_SEC = 25 - player_count
-			spawn_timer.start(10 - player_count)
-			
-			#Spawn pumpkin patches
-			add_pumpkin_patchs(player_count)
-			#Spawn cats
-			cat_spawns.clear()
-			add_cats(ceil(float(player_count)/2), Enums.OrderType.HAPPY)
 
+	Enums.ORDER_TIMEOUT_SEC = Enums.get_order_timeout(d, player_count)
+	spawn_timer.start(Enums.get_spawn_interval(d, player_count))
+
+	match d:
+		1:
+			add_pumpkin_patchs(player_count)
+			cat_spawns.clear()
+			add_cats(ceil(float(player_count) / 2), Enums.OrderType.HAPPY)
 		2:
-			Enums.ORDER_TIMEOUT_SEC = 20 - player_count
-			spawn_timer.start(8 - player_count)
-			
-			#Spawn pumpkin patches
-			add_pumpkin_patchs(player_count+1)
-			#Spawn cats
+			add_pumpkin_patchs(player_count + 1)
 			cat_spawns.clear()
-			add_cats(ceil(float(player_count)/2), Enums.OrderType.HAPPY)
-			add_cats(ceil(float(player_count)/2), Enums.OrderType.ANGRY)
-			
+			add_cats(ceil(float(player_count) / 2), Enums.OrderType.HAPPY)
+			add_cats(ceil(float(player_count) / 2), Enums.OrderType.ANGRY)
 		3:
-			Enums.ORDER_TIMEOUT_SEC = 15 - player_count
-			spawn_timer.start(6 - player_count)
-			
-			#Spawn pumpkin patches
-			add_pumpkin_patchs(player_count+1)
-			#Spawn cats
+			add_pumpkin_patchs(player_count + 1)
 			cat_spawns.clear()
-			add_cats(ceil(float(player_count)/2), Enums.OrderType.HAPPY)
-			add_cats(ceil(float(player_count)/2), Enums.OrderType.ANGRY)
-			add_cats(ceil(float(player_count)/2), Enums.OrderType.SURPRISED)
+			add_cats(ceil(float(player_count) / 2), Enums.OrderType.HAPPY)
+			add_cats(ceil(float(player_count) / 2), Enums.OrderType.ANGRY)
+			add_cats(ceil(float(player_count) / 2), Enums.OrderType.SURPRISED)
 
 func clean_up():
 	var children = pumpkin_spawn_locations.get_children()

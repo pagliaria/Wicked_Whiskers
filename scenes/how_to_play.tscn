@@ -123,7 +123,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 11
-text = "Default cat"
+text = "Black Cat"
 horizontal_alignment = 1
 
 [node name="HappyCatRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox"]
@@ -135,9 +135,6 @@ alignment = 1
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("12_cat")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="Arrow" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox/HappyCatRow"]
 layout_mode = 2
@@ -172,7 +169,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 11
-text = "Red cat"
+text = "Red Cat"
 horizontal_alignment = 1
 
 [node name="AngryCatRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox"]
@@ -222,7 +219,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 11
-text = "Green cat"
+text = "Green Cat"
 horizontal_alignment = 1
 
 [node name="SurprisedCatRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox"]
