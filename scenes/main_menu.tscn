@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c2sjg0nswhljq"]
+[gd_scene load_steps=11 format=3 uid="uid://c2sjg0nswhljq"]
 
 [ext_resource type="Script" uid="uid://boekvosxlovan" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="PackedScene" uid="uid://ca0i1oa70m5ki" path="res://scenes/game.tscn" id="2_ekxnf"]
@@ -9,6 +9,7 @@
 [ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="4_rtw2f"]
 [ext_resource type="Texture2D" uid="uid://chl2c2wmk2wy4" path="res://assets/sprites/characters/elder_skeleton-SWEN.png" id="8_tbmy8"]
 [ext_resource type="PackedScene" uid="uid://dm4b8q7rnxhat" path="res://scenes/how_to_play.tscn" id="9_htp"]
+[ext_resource type="PackedScene" uid="uid://dggpssc6m7x6t" path="res://scenes/difficulty_select.tscn" id="10_diff"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -20,6 +21,7 @@ grow_vertical = 2
 script = ExtResource("1_l6cm7")
 game = ExtResource("2_ekxnf")
 how_to_play_scene = ExtResource("9_htp")
+difficulty_select_scene = ExtResource("10_diff")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1

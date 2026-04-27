@@ -138,7 +138,7 @@ shape = SubResource("RectangleShape2D_32af4")
 position = Vector2(-3.8147e-06, -4.86752)
 scale = Vector2(0.0482394, 0.0507722)
 sprite_frames = SubResource("SpriteFrames_v4p53")
-animation = &"carving"
+animation = &"idle"
 flip_h = true
 
 [node name="cat_area" type="Area2D" parent="."]
