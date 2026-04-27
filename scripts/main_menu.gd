@@ -1,6 +1,7 @@
 extends Control
 
 @export var game: PackedScene
+@export var how_to_play_scene: PackedScene
 @export var address = "147.185.221.31"
 @export var join_port = 38507
 @export var port = 10537
@@ -104,6 +105,9 @@ func _on_join_pressed() -> void:
 func _on_quit_pressed() -> void:
 	get_tree().quit()
 
+func _on_how_to_play_pressed() -> void:
+	var htp = how_to_play_scene.instantiate()
+	get_tree().root.add_child(htp)
 
 func _on_single_player_pressed() -> void:
 	MultiplayerManager.Players[1] = {
