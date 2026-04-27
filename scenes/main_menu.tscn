@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c2sjg0nswhljq"]
+[gd_scene load_steps=10 format=3 uid="uid://c2sjg0nswhljq"]
 
 [ext_resource type="Script" uid="uid://boekvosxlovan" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="PackedScene" uid="uid://ca0i1oa70m5ki" path="res://scenes/game.tscn" id="2_ekxnf"]
@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://b6gmj4detc7k4" path="res://themes/input.tres" id="4_oa1go"]
 [ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="4_rtw2f"]
 [ext_resource type="Texture2D" uid="uid://chl2c2wmk2wy4" path="res://assets/sprites/characters/elder_skeleton-SWEN.png" id="8_tbmy8"]
+[ext_resource type="PackedScene" uid="uid://dm4b8q7rnxhat" path="res://scenes/how_to_play.tscn" id="9_htp"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -18,6 +19,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_l6cm7")
 game = ExtResource("2_ekxnf")
+how_to_play_scene = ExtResource("9_htp")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -100,6 +102,16 @@ offset_bottom = 45.0
 theme = ExtResource("4_rtw2f")
 theme_override_fonts/font = ExtResource("3_wu84c")
 text = "SINGLE PLAYER"
+
+[node name="how_to_play" type="Button" parent="CenterContainer/Panel"]
+layout_mode = 0
+offset_left = -160.0
+offset_top = 60.0
+offset_right = 108.0
+offset_bottom = 125.0
+theme = ExtResource("4_rtw2f")
+theme_override_fonts/font = ExtResource("3_wu84c")
+text = "HOW TO PLAY"
 
 [node name="name_label" type="Label" parent="CenterContainer/Panel"]
 layout_mode = 0
@@ -278,4 +290,5 @@ vertical_alignment = 1
 [connection signal="pressed" from="CenterContainer/Panel/start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/single_player" to="." method="_on_single_player_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/how_to_play" to="." method="_on_how_to_play_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/Panel/change_char" to="." method="_on_change_char_pressed"]
