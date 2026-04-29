@@ -27,6 +27,9 @@ var moving_string = "moving"
 
 # Controller order cycling
 var selected_order: int = 1
+var _throw_start_pos: Vector2 = Vector2.ZERO
+var _throw_order_time: float = 0.0
+var _throw_order_num: int = -1
 
 func _unhandled_input(event):
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -69,6 +72,10 @@ func _try_submit_order(num: int) -> void:
 	if order != null && current_held_item != null:
 		selected_order = num
 		target_node = order.get_customer()
+		# Capture throw info for scoring
+		_throw_start_pos = global_position
+		_throw_order_time = Time.get_unix_time_from_system() - order.get_order_time()
+		_throw_order_num = num
 		turn_in_order.rpc(current_held_item.get_path(), num)
 		print("have it!")
 		play_sound.rpc(throw.get_path())
@@ -124,6 +131,13 @@ func _handle_interact() -> void:
 		change_mask.rpc(path, 10, false)
 		change_layer.rpc(path, 10, false)
 		current_held_item = null
+
+func consume_throw_score_data() -> Dictionary:
+	if _throw_order_num == -1:
+		return {}
+	var data = {"throw_pos": _throw_start_pos, "elapsed": _throw_order_time}
+	_throw_order_num = -1
+	return data
 
 func set_player_name(n: String):
 	player_name.text = n

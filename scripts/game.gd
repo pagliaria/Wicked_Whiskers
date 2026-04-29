@@ -4,6 +4,7 @@ extends Node2D
 @export var customer: PackedScene
 @export var cat: PackedScene
 @export var patch: PackedScene
+@export var night_intro_scene: PackedScene
 
 @onready var night_timer: Timer = $night_timer
 @onready var progress_bar: ProgressBar = $ProgressBar
@@ -18,6 +19,7 @@ extends Node2D
 @onready var pumpkin_spawn_locations: Node = $pumpkin_spawn_locations
 @onready var cat_spawn_locations: Node = $cat_spawn_locations
 @onready var coins_amount: Label = $coins_amount
+@onready var score_amount: Label = $score_amount
 @onready var coin_end: Node2D = $coin_end
 @onready var hell_dog: CharacterBody2D = $hell_dog
 @onready var dog_house: StaticBody2D = $dog_house
@@ -68,6 +70,7 @@ func _on_spawn_timer_timeout() -> void:
 func _process(_delta: float) -> void:
 	progress_bar.value = ((Time.get_unix_time_from_system() - night_start_time) / Enums.get_night_time()) * 100
 	coins_amount.text = str(Enums.coins)
+	score_amount.text = str(Enums.score)
 	
 	if progress_bar.value == 100:
 		Enums.set_passed(true)

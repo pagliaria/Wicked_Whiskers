@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c2sjg0nswhljq"]
+[gd_scene load_steps=10 format=3 uid="uid://c2sjg0nswhljq"]
 
 [ext_resource type="Script" uid="uid://boekvosxlovan" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="Texture2D" uid="uid://c27lfwy1er71m" path="res://assets/sprites/title_screen.png" id="2_title"]
@@ -7,6 +7,7 @@
 [ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="5_buttons"]
 [ext_resource type="PackedScene" uid="uid://dm4b8q7rnxhat" path="res://scenes/how_to_play.tscn" id="7_htp"]
 [ext_resource type="PackedScene" uid="uid://dggpssc6m7x6t" path="res://scenes/difficulty_select.tscn" id="8_diff"]
+[ext_resource type="AudioStream" uid="uid://dvdueo8j7q4hw" path="res://assets/music/spooky_tune.mp3" id="9_jk1qb"]
 [ext_resource type="PackedScene" uid="uid://bw4fdmn0xuqjf" path="res://scenes/multiplayer_menu.tscn" id="9_mp"]
 
 [node name="MainMenu" type="Control"]
@@ -142,6 +143,12 @@ theme_override_font_sizes/font_size = 11
 text = "Character"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_jk1qb")
+volume_db = -15.0
+autoplay = true
+parameters/looping = true
 
 [connection signal="pressed" from="CenterContainer/Panel/single_player" to="." method="_on_single_player_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/multiplayer" to="." method="_on_multiplayer_pressed"]

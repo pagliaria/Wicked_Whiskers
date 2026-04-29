@@ -188,6 +188,19 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				if is_multiplayer_authority():
 					var i = randi_range(3,10)
 					spawn_coins.rpc(i)
+					# Award score based on time remaining and throw distance
+					var player_node = body.get_player()
+					if player_node != null && player_node.has_method("consume_throw_score_data"):
+						var data = player_node.consume_throw_score_data()
+						if data.size() > 0:
+							const BASE_POINTS = 100
+							const MAX_DISTANCE = 400.0
+							var time_ratio = clamp(1.0 - (data.elapsed / Enums.ORDER_TIMEOUT_SEC), 0.0, 1.0)
+							var dist = data.throw_pos.distance_to(global_position)
+							var dist_bonus = clamp(1.0 + (dist / MAX_DISTANCE), 1.0, 2.0)
+							var points = int(BASE_POINTS * time_ratio * dist_bonus)
+							Enums.score += points
+							print("Score +%d (time: %.2f, dist: %.2f) = %d" % [points, time_ratio, dist_bonus, Enums.score])
 				OrderManager.remove_order.rpc(order_number)
 				hit_by_order = true
 				order_bubble.visible = false
