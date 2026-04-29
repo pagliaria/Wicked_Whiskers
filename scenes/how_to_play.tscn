@@ -1,0 +1,450 @@
+[gd_scene load_steps=12 format=3 uid="uid://dm4b8q7rnxhat"]
+
+[ext_resource type="Script" uid="uid://cr4k0nhr1k085" path="res://scripts/how_to_play.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_font"]
+[ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="3_theme"]
+[ext_resource type="Texture2D" uid="uid://blb8odocb5per" path="res://assets/sprites/pumpkins/happy.png" id="4_happy"]
+[ext_resource type="Texture2D" uid="uid://cvx2gmb6evj20" path="res://assets/sprites/pumpkins/angry.png" id="5_angry"]
+[ext_resource type="Texture2D" uid="uid://dfgd3k0qj8mht" path="res://assets/sprites/pumpkins/surprised.png" id="6_surprised"]
+[ext_resource type="Texture2D" uid="uid://dc55f03a7wvap" path="res://assets/sprites/hats/witch_hat.png" id="7_witch_hat"]
+[ext_resource type="Texture2D" uid="uid://ct2wkknttmomt" path="res://assets/sprites/hats/cap.png" id="8_cap"]
+[ext_resource type="Texture2D" uid="uid://8yvoyi1jbtr" path="res://assets/sprites/hats/cowboy.png" id="9_cowboy"]
+[ext_resource type="Texture2D" uid="uid://cseab43q4svka" path="res://assets/sprites/hats/sombraro.png" id="10_sombrero"]
+[ext_resource type="Texture2D" uid="uid://k6krsroa4edn" path="res://assets/sprites/cat_idle_single.png" id="12_cat"]
+
+[node name="HowToPlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -340.0
+offset_right = 450.0
+offset_bottom = 340.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_top = 14.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 26
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 58.0
+offset_right = -18.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="ObjectiveHeader" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 17
+text = "OBJECTIVE"
+
+[node name="ObjectiveText" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "It's Halloween night! Customers arrive wanting pumpkins carved with specific expressions. Grow pumpkins, carve them with the right cat, and deliver them before orders expire. Survive all 3 nights to win!"
+autowrap_mode = 3
+
+[node name="Sep1" type="HSeparator" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="CarvingHeader" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 17
+text = "GROWING & CARVING"
+
+[node name="CarvingText" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Pumpkins grow in patches around the stage. Pick one up and bring it to the correct carving cat — each cat produces a different expression. Interact with the cat to start carving, then collect the finished pumpkin!"
+autowrap_mode = 3
+
+[node name="CatsGrid" type="GridContainer" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+columns = 3
+
+[node name="HappyCatBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HappyCatLabel" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Black Cat"
+horizontal_alignment = 1
+
+[node name="HappyCatRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="CatImg" type="TextureRect" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox/HappyCatRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Arrow" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox/HappyCatRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 18
+text = ">"
+vertical_alignment = 1
+
+[node name="HappyPumpkin" type="TextureRect" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox/HappyCatRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_happy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HappyResultLabel" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/HappyCatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.4, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "Happy :)"
+horizontal_alignment = 1
+
+[node name="AngryCatBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AngryCatLabel" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Red Cat"
+horizontal_alignment = 1
+
+[node name="AngryCatRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="CatImg" type="TextureRect" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox/AngryCatRow"]
+modulate = Color(1, 0.35, 0.35, 1)
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("12_cat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Arrow" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox/AngryCatRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 18
+text = ">"
+vertical_alignment = 1
+
+[node name="AngryPumpkin" type="TextureRect" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox/AngryCatRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_angry")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AngryResultLabel" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/AngryCatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "Angry >:("
+horizontal_alignment = 1
+
+[node name="SurprisedCatBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SurprisedCatLabel" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Green Cat"
+horizontal_alignment = 1
+
+[node name="SurprisedCatRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="CatImg" type="TextureRect" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox/SurprisedCatRow"]
+modulate = Color(0.35, 1, 0.45, 1)
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("12_cat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Arrow" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox/SurprisedCatRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 18
+text = ">"
+vertical_alignment = 1
+
+[node name="SurprisedPumpkin" type="TextureRect" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox/SurprisedCatRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_surprised")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SurprisedResultLabel" type="Label" parent="Panel/ScrollContainer/Content/CatsGrid/SurprisedCatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.7, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "Surprised :O"
+horizontal_alignment = 1
+
+[node name="Sep2" type="HSeparator" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="OrdersHeader" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 17
+text = "DELIVERING ORDERS"
+
+[node name="OrdersText" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Each customer's order bubble shows which pumpkin expression they want. Pick up the matching carved pumpkin and deliver it to them before the timer runs out. Successful deliveries earn you coins!"
+autowrap_mode = 3
+
+[node name="Sep3" type="HSeparator" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="HatsHeader" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 17
+text = "HAT TABLES"
+
+[node name="HatsText" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Some orders require a hat on the pumpkin. Pick up hats from the tables around the map and place them on a carved pumpkin before delivering."
+autowrap_mode = 3
+
+[node name="HatsRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="WitchBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/HatsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WitchImg" type="TextureRect" parent="Panel/ScrollContainer/Content/HatsRow/WitchBox"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("7_witch_hat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WitchLabel" type="Label" parent="Panel/ScrollContainer/Content/HatsRow/WitchBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Witch"
+horizontal_alignment = 1
+
+[node name="CapBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/HatsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CapImg" type="TextureRect" parent="Panel/ScrollContainer/Content/HatsRow/CapBox"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("8_cap")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CapLabel" type="Label" parent="Panel/ScrollContainer/Content/HatsRow/CapBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Cap"
+horizontal_alignment = 1
+
+[node name="CowboyBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/HatsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CowboyImg" type="TextureRect" parent="Panel/ScrollContainer/Content/HatsRow/CowboyBox"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("9_cowboy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CowboyLabel" type="Label" parent="Panel/ScrollContainer/Content/HatsRow/CowboyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Cowboy"
+horizontal_alignment = 1
+
+[node name="SombreroBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/HatsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SombreroImg" type="TextureRect" parent="Panel/ScrollContainer/Content/HatsRow/SombreroBox"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("10_sombrero")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SombreroLabel" type="Label" parent="Panel/ScrollContainer/Content/HatsRow/SombreroBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 11
+text = "Sombrero"
+horizontal_alignment = 1
+
+[node name="Sep4" type="HSeparator" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="CoinsHeader" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 17
+text = "COINS & THE HELL HOUND"
+
+[node name="CoinsRow" type="HBoxContainer" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="CoinsImgBox" type="VBoxContainer" parent="Panel/ScrollContainer/Content/CoinsRow"]
+layout_mode = 2
+
+[node name="CoinImg" type="TextureRect" parent="Panel/ScrollContainer/Content/CoinsRow/CoinsImgBox"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HoundImg" type="TextureRect" parent="Panel/ScrollContainer/Content/CoinsRow/CoinsImgBox"]
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="CoinsText" type="Label" parent="Panel/ScrollContainer/Content/CoinsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Every order you complete earns coins. If you're too slow, angry customers may cause trouble! Spend your coins at the dog house to summon a Hell Hound — it will help you fend off angry customers and keep the night under control."
+autowrap_mode = 3
+
+[node name="Sep5" type="HSeparator" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="ControlsHeader" type="Label" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 17
+text = "CONTROLS"
+
+[node name="ControlsGrid" type="GridContainer" parent="Panel/ScrollContainer/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = -50.0
+offset_right = 110.0
+offset_bottom = -10.0
+grow_horizontal = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+text = "CLOSE"
+
+[connection signal="pressed" from="Panel/CloseButton" to="." method="_on_close_pressed"]

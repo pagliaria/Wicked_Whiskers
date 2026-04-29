@@ -1,10 +1,19 @@
 extends Node
 
 var night = 1
-var night_time_sec = 60
+var night_time_sec = 180
 var ORDER_TIMEOUT_SEC = 30
-
+var coins = 0
+var coin_counter_pos
 var night_passed = false
+
+enum HatType {
+	NONE,
+	WITCH,
+	CAP,
+	COWBOY,
+	SOMBRARO
+}
 
 enum OrderType {
 	INVALID,
@@ -13,17 +22,69 @@ enum OrderType {
 	SURPRISED
 }
 
+enum CharSelection {
+	KNIGHT,
+	WITCH,
+	BLUE_WITCH,
+	SKELETON
+}
+
+enum Difficulty {
+	EASY,
+	NORMAL,
+	HARD
+}
+
+# Base ORDER_TIMEOUT_SEC per night (normal difficulty, 1 player)
+# Indexed by night (0 = night 1, 1 = night 2, 2 = night 3)
+const BASE_ORDER_TIMEOUT = [25, 20, 15]
+
+# Base spawn interval in seconds per night (normal difficulty, 1 player)
+const BASE_SPAWN_INTERVAL = [10, 8, 6]
+
+# Difficulty modifiers applied to timeouts and spawn intervals.
+# Timeout: higher = more generous. Spawn: higher = less frequent (easier).
+const DIFFICULTY_TIMEOUT_MOD = {
+	Difficulty.EASY:   5,
+	Difficulty.NORMAL: 0,
+	Difficulty.HARD:  -5
+}
+
+const DIFFICULTY_SPAWN_MOD = {
+	Difficulty.EASY:   3,
+	Difficulty.NORMAL: 0,
+	Difficulty.HARD:  -2
+}
+
+var difficulty: Difficulty = Difficulty.NORMAL
+
 func get_night() -> int:
 	return night
-	
-func set_night(n:int):
+
+func set_night(n: int):
 	night = n
 
-func get_night_time() ->int:
+func get_night_time() -> int:
 	return night_time_sec
 
-func set_passed(p:bool):
+func set_passed(p: bool):
 	night_passed = p
 
-func get_passed() ->bool:
+func get_passed() -> bool:
 	return night_passed
+
+func set_difficulty(d: Difficulty):
+	difficulty = d
+
+func get_difficulty() -> Difficulty:
+	return difficulty
+
+func get_order_timeout(night_num: int, player_count: int) -> int:
+	var base = BASE_ORDER_TIMEOUT[night_num - 1]
+	var mod = DIFFICULTY_TIMEOUT_MOD[difficulty]
+	return base + mod - player_count
+
+func get_spawn_interval(night_num: int, player_count: int) -> float:
+	var base = BASE_SPAWN_INTERVAL[night_num - 1]
+	var mod = DIFFICULTY_SPAWN_MOD[difficulty]
+	return float(base + mod - player_count)

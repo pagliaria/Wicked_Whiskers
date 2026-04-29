@@ -1,0 +1,77 @@
+[gd_scene load_steps=10 format=3 uid="uid://bwo2shj4qu5v8"]
+
+[ext_resource type="Script" uid="uid://bodu6u7sjdpyv" path="res://scripts/jack.gd" id="1_wn71h"]
+[ext_resource type="Texture2D" uid="uid://cvx2gmb6evj20" path="res://assets/sprites/pumpkins/angry.png" id="2_7nm77"]
+[ext_resource type="Script" uid="uid://dp6omst0k3lxv" path="res://scripts/jack_area.gd" id="2_d0iqa"]
+[ext_resource type="Texture2D" uid="uid://dfgd3k0qj8mht" path="res://assets/sprites/pumpkins/surprised.png" id="2_wn71h"]
+[ext_resource type="Texture2D" uid="uid://dc55f03a7wvap" path="res://assets/sprites/hats/witch_hat.png" id="5_eykuw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d0iqa"]
+radius = 7.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_d0iqa"]
+load_path = "res://.godot/imported/happy.png-f3aaa4c0a97a3e24c3c1b28d6ddafea2.ctex"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wef06"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wn71h"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:type")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("happy:visible")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("angry:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("surprised:visible")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+
+[node name="jack" type="RigidBody2D"]
+script = ExtResource("1_wn71h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_d0iqa")
+
+[node name="happy" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -1)
+scale = Vector2(0.138393, 0.138393)
+texture = SubResource("CompressedTexture2D_d0iqa")
+
+[node name="angry" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2.68221e-07, -1)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_7nm77")
+
+[node name="surprised" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2.68221e-07, -1)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_wn71h")
+
+[node name="jack_area" type="Area2D" parent="."]
+script = ExtResource("2_d0iqa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="jack_area"]
+shape = SubResource("CircleShape2D_wef06")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_wn71h")
+
+[node name="hat_image" type="TextureRect" parent="."]
+visible = false
+offset_left = -9.0
+offset_top = -17.0
+offset_right = 9.0
+texture = ExtResource("5_eykuw")
+expand_mode = 1

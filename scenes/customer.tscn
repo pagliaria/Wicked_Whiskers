@@ -1,6 +1,7 @@
-[gd_scene load_steps=26 format=3 uid="uid://bnvsfha2gkpal"]
+[gd_scene load_steps=28 format=3 uid="uid://bnvsfha2gkpal"]
 
 [ext_resource type="Script" uid="uid://dtcw4qibutrx" path="res://scripts/customer.gd" id="1_xss0h"]
+[ext_resource type="PackedScene" uid="uid://ca8nqlya2x4ip" path="res://scenes/order_bubble.tscn" id="2_qqxhk"]
 [ext_resource type="Texture2D" uid="uid://bpik15hp2cfs2" path="res://assets/sprites/ghost.png" id="2_xss0h"]
 [ext_resource type="AudioStream" uid="uid://nsikjepg4w5p" path="res://assets/sounds/smack.mp3" id="3_8qg4y"]
 [ext_resource type="AudioStream" uid="uid://ctoe85y8k6huh" path="res://assets/sounds/scream-85218.mp3" id="4_rjbu2"]
@@ -152,9 +153,38 @@ bg_color = Color(0.180141, 0.721221, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbu2"]
 bg_color = Color(0.977949, 0.230255, 0.769886, 1)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rjbu2"]
+properties/0/path = NodePath("ghost:animation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("ghost:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("ghost:visible")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:position")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("ProgressBar:value")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:rotation")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("ghost:modulate")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+
 [node name="customer" type="CharacterBody2D"]
 z_index = 5
+collision_layer = 129
+collision_mask = 129
 script = ExtResource("1_xss0h")
+
+[node name="order_bubble" parent="." instance=ExtResource("2_qqxhk")]
+visible = false
+position = Vector2(19, -24)
 
 [node name="ghost" type="AnimatedSprite2D" parent="."]
 z_index = 2
@@ -173,8 +203,8 @@ wait_time = 2.0
 target_position = Vector2(17, 0)
 
 [node name="ghost_body" type="Area2D" parent="."]
-collision_layer = 513
-collision_mask = 512
+collision_layer = 641
+collision_mask = 640
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ghost_body"]
 shape = SubResource("CircleShape2D_xss0h")
@@ -200,6 +230,9 @@ show_percentage = false
 
 [node name="scream" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_rjbu2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_rjbu2")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="diretionTimer" to="." method="_on_timer_timeout"]

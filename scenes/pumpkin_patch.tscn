@@ -1,16 +1,32 @@
-[gd_scene load_steps=3 format=3 uid="uid://xvxro4ui6fv5"]
+[gd_scene load_steps=4 format=3 uid="uid://xvxro4ui6fv5"]
 
 [ext_resource type="Texture2D" uid="uid://cbfggr3ggk5lr" path="res://assets/sprites/pumpkin_patch.png" id="1_5dglq"]
 [ext_resource type="Script" uid="uid://cg43ybfmqgywb" path="res://scripts/pumpkin_patch.gd" id="2_w60p4"]
 
-[node name="Sprite2D" type="Sprite2D"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_w60p4"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:visible")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="patch" type="Sprite2D"]
 position = Vector2(-1.19209e-07, 0)
 scale = Vector2(0.0968935, 0.0968935)
 texture = ExtResource("1_5dglq")
 script = ExtResource("2_w60p4")
 
+[node name="spawn_nodes" type="Node" parent="."]
+
 [node name="grow" type="Timer" parent="."]
-wait_time = 2.0
 autostart = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_w60p4")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://by2ickff22ej2")
+spawn_path = NodePath("../spawn_nodes")
 
 [connection signal="timeout" from="grow" to="." method="_on_grow_timeout"]
