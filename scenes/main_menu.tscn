@@ -1,15 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://c2sjg0nswhljq"]
+[gd_scene load_steps=9 format=3 uid="uid://c2sjg0nswhljq"]
 
 [ext_resource type="Script" uid="uid://boekvosxlovan" path="res://scripts/main_menu.gd" id="1_l6cm7"]
-[ext_resource type="PackedScene" uid="uid://ca0i1oa70m5ki" path="res://scenes/game.tscn" id="2_ekxnf"]
-[ext_resource type="Texture2D" uid="uid://c27lfwy1er71m" path="res://assets/sprites/title_screen.png" id="3_8ln24"]
-[ext_resource type="Texture2D" uid="uid://b0r6hq80teod1" path="res://assets/sprites/characters/knight.png" id="3_bqqt6"]
-[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="3_wu84c"]
-[ext_resource type="Theme" uid="uid://b6gmj4detc7k4" path="res://themes/input.tres" id="4_oa1go"]
-[ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="4_rtw2f"]
-[ext_resource type="Texture2D" uid="uid://chl2c2wmk2wy4" path="res://assets/sprites/characters/elder_skeleton-SWEN.png" id="8_tbmy8"]
-[ext_resource type="PackedScene" uid="uid://dm4b8q7rnxhat" path="res://scenes/how_to_play.tscn" id="9_htp"]
-[ext_resource type="PackedScene" uid="uid://dggpssc6m7x6t" path="res://scenes/difficulty_select.tscn" id="10_diff"]
+[ext_resource type="Texture2D" uid="uid://c27lfwy1er71m" path="res://assets/sprites/title_screen.png" id="2_title"]
+[ext_resource type="Texture2D" uid="uid://b0r6hq80teod1" path="res://assets/sprites/characters/knight.png" id="3_knight"]
+[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="4_font"]
+[ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="5_buttons"]
+[ext_resource type="PackedScene" uid="uid://dm4b8q7rnxhat" path="res://scenes/how_to_play.tscn" id="7_htp"]
+[ext_resource type="PackedScene" uid="uid://dggpssc6m7x6t" path="res://scenes/difficulty_select.tscn" id="8_diff"]
+[ext_resource type="PackedScene" uid="uid://bw4fdmn0xuqjf" path="res://scenes/multiplayer_menu.tscn" id="9_mp"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -19,9 +17,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_l6cm7")
-game = ExtResource("2_ekxnf")
-how_to_play_scene = ExtResource("9_htp")
-difficulty_select_scene = ExtResource("10_diff")
+how_to_play_scene = ExtResource("7_htp")
+difficulty_select_scene = ExtResource("8_diff")
+multiplayer_menu_scene = ExtResource("9_mp")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -43,47 +41,50 @@ offset_top = -540.0
 offset_right = 960.0
 offset_bottom = 548.0
 grow_horizontal = 2
-texture = ExtResource("3_8ln24")
+texture = ExtResource("2_title")
 
-[node name="name" type="LineEdit" parent="CenterContainer/Panel"]
+[node name="single_player" type="Button" parent="CenterContainer/Panel"]
 layout_mode = 0
-offset_left = 512.0
-offset_top = -476.0
-offset_right = 768.0
-offset_bottom = -445.667
-theme = ExtResource("4_oa1go")
-alignment = 1
+offset_left = -272.0
+offset_top = -20.0
+offset_right = -4.0
+offset_bottom = 45.0
+focus_neighbor_top = NodePath("../how_to_play")
+focus_neighbor_bottom = NodePath("../multiplayer")
+focus_next = NodePath("../multiplayer")
+focus_previous = NodePath("../how_to_play")
+theme = ExtResource("5_buttons")
+theme_override_fonts/font = ExtResource("4_font")
+text = "SINGLE PLAYER"
 
-[node name="host" type="Button" parent="CenterContainer/Panel"]
+[node name="multiplayer" type="Button" parent="CenterContainer/Panel"]
 layout_mode = 0
-offset_left = 360.0
-offset_top = -412.0
-offset_right = 616.0
-offset_bottom = -347.0
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
-text = "HOST"
-
-[node name="join" type="Button" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_left = 672.0
-offset_top = -412.0
-offset_right = 928.0
-offset_bottom = -347.0
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
-text = "JOIN"
-
-[node name="start" type="Button" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_left = 512.0
-offset_top = -324.0
-offset_right = 768.0
-offset_bottom = -259.0
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
+offset_left = -136.0
+offset_top = 68.0
+offset_right = 132.0
+offset_bottom = 133.0
+focus_neighbor_top = NodePath("../single_player")
+focus_neighbor_bottom = NodePath("../how_to_play")
+focus_next = NodePath("../how_to_play")
+focus_previous = NodePath("../single_player")
+theme = ExtResource("5_buttons")
+theme_override_fonts/font = ExtResource("4_font")
 disabled = true
-text = "START"
+text = "MULTIPLAYER"
+
+[node name="how_to_play" type="Button" parent="CenterContainer/Panel"]
+layout_mode = 0
+offset_left = -8.0
+offset_top = 164.0
+offset_right = 260.0
+offset_bottom = 229.0
+focus_neighbor_top = NodePath("../multiplayer")
+focus_neighbor_bottom = NodePath("../single_player")
+focus_next = NodePath("../single_player")
+focus_previous = NodePath("../multiplayer")
+theme = ExtResource("5_buttons")
+theme_override_fonts/font = ExtResource("4_font")
+text = "HOW TO PLAY"
 
 [node name="quit" type="Button" parent="CenterContainer/Panel"]
 layout_mode = 0
@@ -91,174 +92,29 @@ offset_left = 680.0
 offset_top = 460.0
 offset_right = 936.0
 offset_bottom = 525.0
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
+theme = ExtResource("5_buttons")
+theme_override_fonts/font = ExtResource("4_font")
 text = "QUIT"
 
-[node name="single_player" type="Button" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_left = -160.0
-offset_top = -20.0
-offset_right = 108.0
-offset_bottom = 45.0
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
-text = "SINGLE PLAYER"
-
-[node name="how_to_play" type="Button" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_left = -160.0
-offset_top = 60.0
-offset_right = 108.0
-offset_bottom = 125.0
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
-text = "HOW TO PLAY"
-
-[node name="name_label" type="Label" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_left = 576.0
-offset_top = -516.0
-offset_right = 704.0
-offset_bottom = -493.667
-theme_override_fonts/font = ExtResource("3_wu84c")
-text = "Name"
-horizontal_alignment = 1
-
-[node name="status" type="Label" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_left = -8.0
-offset_top = 356.0
-offset_right = 568.0
-offset_bottom = 378.333
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_wu84c")
-horizontal_alignment = 1
-
-[node name="player1" type="VBoxContainer" parent="CenterContainer/Panel" groups=["player_spots"]]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 412.0
-offset_right = 129.0
-offset_bottom = 428.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_group_ = true
-
-[node name="player_name" type="Label" parent="CenterContainer/Panel/player1"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_wu84c")
-horizontal_alignment = 1
-text_overrun_behavior = 3
-metadata/_edit_group_ = true
-
-[node name="TextureRect" type="Sprite2D" parent="CenterContainer/Panel/player1"]
-position = Vector2(64, 72)
-scale = Vector2(3.16667, 3.16667)
-texture = ExtResource("3_bqqt6")
-region_enabled = true
-region_rect = Rect2(0, 0, 30.0599, 38.1794)
-
-[node name="player2" type="VBoxContainer" parent="CenterContainer/Panel" groups=["player_spots"]]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 128.0
-offset_top = 412.0
-offset_right = 257.0
-offset_bottom = 428.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_group_ = true
-
-[node name="player_name" type="Label" parent="CenterContainer/Panel/player2"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_wu84c")
-horizontal_alignment = 1
-
-[node name="TextureRect" type="Sprite2D" parent="CenterContainer/Panel/player2"]
-position = Vector2(64, 72)
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("8_tbmy8")
-region_enabled = true
-region_rect = Rect2(48, 2, 46, 66)
-
-[node name="player3" type="VBoxContainer" parent="CenterContainer/Panel" groups=["player_spots"]]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 256.0
-offset_top = 412.0
-offset_right = 385.0
-offset_bottom = 428.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_group_ = true
-
-[node name="player_name" type="Label" parent="CenterContainer/Panel/player3"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_wu84c")
-horizontal_alignment = 1
-
-[node name="TextureRect" type="Sprite2D" parent="CenterContainer/Panel/player3"]
-position = Vector2(64, 72)
-scale = Vector2(3.16667, 3.16667)
-texture = ExtResource("3_bqqt6")
-region_enabled = true
-region_rect = Rect2(0, 0, 30.0599, 38.1794)
-
-[node name="player4" type="VBoxContainer" parent="CenterContainer/Panel" groups=["player_spots"]]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 384.0
-offset_top = 412.0
-offset_right = 513.0
-offset_bottom = 428.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_group_ = true
-
-[node name="player_name" type="Label" parent="CenterContainer/Panel/player4"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_wu84c")
-horizontal_alignment = 1
-
-[node name="TextureRect" type="Sprite2D" parent="CenterContainer/Panel/player4"]
-position = Vector2(64, 72)
-scale = Vector2(3.16667, 3.16667)
-texture = ExtResource("3_bqqt6")
-region_enabled = true
-region_rect = Rect2(0, 0, 30.0599, 38.1794)
-
-[node name="Panel" type="Panel" parent="CenterContainer/Panel"]
+[node name="CharPanel" type="Panel" parent="CenterContainer/Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 792.0
-offset_top = -332.0
-offset_right = 936.0
-offset_bottom = -148.0
+offset_left = 56.0
+offset_top = 276.0
+offset_right = 200.0
+offset_bottom = 460.0
 grow_horizontal = 2
 
-[node name="char_select_image" type="Sprite2D" parent="CenterContainer/Panel/Panel"]
+[node name="char_select_image" type="Sprite2D" parent="CenterContainer/Panel/CharPanel"]
 position = Vector2(72, 80)
 scale = Vector2(3.3, 3.3)
-texture = ExtResource("3_bqqt6")
+texture = ExtResource("3_knight")
 region_enabled = true
 region_rect = Rect2(1, 3, 30, 32)
 
-[node name="change_char" type="Button" parent="CenterContainer/Panel/Panel"]
+[node name="change_char" type="Button" parent="CenterContainer/Panel/CharPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -269,28 +125,26 @@ offset_right = -20.0
 offset_bottom = -21.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4_rtw2f")
-theme_override_fonts/font = ExtResource("3_wu84c")
+theme = ExtResource("5_buttons")
+theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 12
 text = "Change"
 
-[node name="Label" type="Label" parent="CenterContainer/Panel/Panel"]
+[node name="CharLabel" type="Label" parent="CenterContainer/Panel/CharPanel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.13
 offset_top = 8.0
 offset_bottom = 8.08
-theme_override_fonts/font = ExtResource("3_wu84c")
+theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 11
 text = "Character"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="CenterContainer/Panel/host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="CenterContainer/Panel/join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="CenterContainer/Panel/start" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="CenterContainer/Panel/quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/single_player" to="." method="_on_single_player_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/multiplayer" to="." method="_on_multiplayer_pressed"]
 [connection signal="pressed" from="CenterContainer/Panel/how_to_play" to="." method="_on_how_to_play_pressed"]
-[connection signal="pressed" from="CenterContainer/Panel/Panel/change_char" to="." method="_on_change_char_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/CharPanel/change_char" to="." method="_on_change_char_pressed"]

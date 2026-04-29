@@ -427,15 +427,9 @@ theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 17
 text = "CONTROLS"
 
-[node name="ControlsText" type="Label" parent="Panel/ScrollContainer/Content"]
+[node name="ControlsGrid" type="GridContainer" parent="Panel/ScrollContainer/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
-theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 13
-text = "W / A / S / D    Move
-Enter              Interact / Pick up / Deliver
-1 - 9              Select order to fulfil
-ESC                Pause"
+size_flags_horizontal = 3
 
 [node name="CloseButton" type="Button" parent="Panel"]
 layout_mode = 1
