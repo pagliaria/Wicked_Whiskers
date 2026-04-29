@@ -24,15 +24,16 @@ extends Node2D
 @onready var hell_dog: CharacterBody2D = $hell_dog
 @onready var dog_house: StaticBody2D = $dog_house
 
+var players = []
 var cat_spawns = []
 var orderTime
 var night_start_time
+var transitioning_to_next_night = false
 
 func _ready() -> void:
 	dog_house.set_dog(hell_dog)
 	hell_dog.set_customer_spawn_point(customer_spwan_point)
 	OrderManager.set_order_display($orders/MarginContainer/orders_display)
-	night_start_time = Time.get_unix_time_from_system()
 	Enums.coin_counter_pos = coin_end.global_position
 	
 	var index = 0
@@ -43,13 +44,19 @@ func _ready() -> void:
 		current_player.set_player_name(MultiplayerManager.Players[p].name)
 		current_player.set_char_select(MultiplayerManager.Players[p].char)
 		
+		players.append(current_player)
+		
 		for spawn in get_tree().get_nodes_in_group("PlayerSpawnPoints"):
 			if spawn.name == str(index):
 				current_player.global_position = spawn.global_position
-		index += 1
+		
+	#set_players_visibility(false)
+	show_night_intro()
 	
-	new_night(Enums.get_night())
-
+func set_players_visibility(vis: bool):
+	for player in players:
+		player.visible = vis
+		
 func _on_spawn_timer_timeout() -> void:
 	if !is_multiplayer_authority():
 		return
@@ -72,24 +79,25 @@ func _process(_delta: float) -> void:
 	coins_amount.text = str(Enums.coins)
 	score_amount.text = str(Enums.score)
 	
-	if progress_bar.value == 100:
+	if progress_bar.value == 100 && !transitioning_to_next_night:
 		Enums.set_passed(true)
 		day_end()
 
 func day_end():
+	transitioning_to_next_night = true
 	print("new day!")
 	spawn_timer.stop()
 	OrderManager.clear_all_orders()
 	if Enums.get_night() == 3:
 		win.visible = true
+		get_tree().paused = true
 	else:
 		if is_multiplayer_authority():
-			next_night.visible = true
+			clean_up()
+			advance_to_next_night.rpc()
 		else:
-			next_night.text = "Waiting for host to continue..."
+			next_night.text = "Waiting for next night..."
 			next_night.visible = true
-		
-	get_tree().paused = true
 
 func add_cats(n: int, type: Enums.OrderType):
 	if !is_multiplayer_authority():
@@ -130,6 +138,7 @@ func add_pumpkin_patchs(n: int):
 		patch_scene.global_position = position_node.global_position
 
 func new_night(d: int):
+	night_start_time = Time.get_unix_time_from_system()
 	night.text = "Night " + str(Enums.get_night())
 	var player_count = MultiplayerManager.Players.size()
 
@@ -152,6 +161,43 @@ func new_night(d: int):
 			add_cats(ceil(float(player_count) / 2), Enums.OrderType.HAPPY)
 			add_cats(ceil(float(player_count) / 2), Enums.OrderType.ANGRY)
 			add_cats(ceil(float(player_count) / 2), Enums.OrderType.SURPRISED)
+
+func show_night_intro() -> void:
+	if night_intro_scene == null:
+		new_night(Enums.get_night())
+		return
+
+	get_tree().paused = true
+
+	var intro_layer := CanvasLayer.new()
+	intro_layer.layer = 20
+	intro_layer.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+	add_child(intro_layer)
+
+	var intro = night_intro_scene.instantiate()
+	intro.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+	intro_layer.add_child(intro)
+
+	if intro.has_method("setup"):
+		intro.setup(Enums.get_night())
+
+	intro.intro_finished.connect(_on_night_intro_finished.bind(intro_layer), CONNECT_ONE_SHOT)
+
+func _on_night_intro_finished(intro_layer: CanvasLayer) -> void:
+	if is_instance_valid(intro_layer):
+		intro_layer.queue_free()
+
+	get_tree().paused = false
+	new_night(Enums.get_night())
+	#set_players_visibility(true)
+
+@rpc("any_peer", "call_local")
+func advance_to_next_night() -> void:
+	get_tree().paused = false
+	Enums.set_night(Enums.get_night() + 1)
+	Enums.set_passed(false)
+	OrderManager.clear_all_orders()
+	get_tree().reload_current_scene()
 
 func clean_up():
 	var children = pumpkin_spawn_locations.get_children()

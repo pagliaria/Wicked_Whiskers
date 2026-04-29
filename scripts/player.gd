@@ -30,6 +30,14 @@ var selected_order: int = 1
 var _throw_start_pos: Vector2 = Vector2.ZERO
 var _throw_order_time: float = 0.0
 var _throw_order_num: int = -1
+var default_sprite_position := Vector2.ZERO
+var default_sprite_scale := Vector2.ONE
+
+func _ready() -> void:
+	default_sprite_position = sprite.position
+	default_sprite_scale = sprite.scale
+	sprite.visible = false
+	sprite.stop()
 
 func _unhandled_input(event):
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -275,6 +283,8 @@ func set_player_id(id):
 func set_char_select(c: Enums.CharSelection):
 	char_select = c
 	print("Char set to: ", c)
+	sprite.scale = default_sprite_scale
+	sprite.position = default_sprite_position
 
 	match char_select:
 		Enums.CharSelection.KNIGHT:
@@ -296,3 +306,6 @@ func set_char_select(c: Enums.CharSelection):
 			sprite.scale.x = .3
 			sprite.scale.y = .3
 			sprite.position.y = -10
+
+	sprite.visible = true
+	play_sprite.rpc(sprite.get_path(), true, idle_string)

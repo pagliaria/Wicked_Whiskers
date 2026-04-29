@@ -1,7 +1,7 @@
 extends Node
 
 var night = 1
-var night_time_sec = 180
+var night_time_sec = 120
 var ORDER_TIMEOUT_SEC = 30
 var coins = 0
 var score = 0

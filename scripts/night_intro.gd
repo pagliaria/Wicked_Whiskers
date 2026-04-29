@@ -5,7 +5,7 @@ signal intro_finished
 @onready var night_label: Label = $VBox/NightLabel
 @onready var subtitle_label: Label = $VBox/SubtitleLabel
 @onready var tip_label: Label = $VBox/TipLabel
-@onready var begin_btn: Button = $VBox/BeginButton
+@onready var begin_btn: Button = $VBox/BeginCenter/BeginButton
 @onready var anim: AnimationPlayer = $AnimationPlayer
 
 const SUBTITLES = [
