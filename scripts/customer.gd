@@ -13,6 +13,7 @@ const COIN = preload("res://scenes/coin.tscn")
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var scream: AudioStreamPlayer2D = $scream
 @onready var order_bubble: Sprite2D = $order_bubble
+@onready var wrong_label: Label = $wrong_label
 
 var problems = false
 var wrong_order = false
@@ -184,6 +185,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				problems = true
 				#set_player.rpc(body.get_player().get_path())
 				player = body.get_player()
+				show_wrong_feedback.rpc()
 			else:
 				if is_multiplayer_authority():
 					var i = randi_range(3,10)
@@ -206,6 +208,20 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				order_bubble.visible = false
 				problems = false
 			remove_timer.start(1)
+
+@rpc("any_peer", "call_local")
+func show_wrong_feedback():
+	wrong_label.visible = true
+	var tween = create_tween()
+	var origin = wrong_label.position
+	const SHAKE_DIST = 4.0
+	const SHAKE_STEP = 0.04
+	for _i in range(6):
+		tween.tween_property(wrong_label, "position", origin + Vector2(SHAKE_DIST, 0), SHAKE_STEP)
+		tween.tween_property(wrong_label, "position", origin + Vector2(-SHAKE_DIST, 0), SHAKE_STEP)
+	tween.tween_property(wrong_label, "position", origin, SHAKE_STEP)
+	tween.tween_property(wrong_label, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(func(): wrong_label.visible = false; wrong_label.modulate.a = 1.0)
 
 @rpc("any_peer","call_local")
 func play_sound(node):
