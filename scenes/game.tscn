@@ -5322,16 +5322,6 @@ visible = false
 position = Vector2(146, 86)
 scale = Vector2(0.0661982, 0.0661982)
 
-[node name="restart" type="Label" parent="."]
-visible = false
-z_index = 10
-offset_left = -80.0
-offset_top = 140.0
-offset_right = 178.0
-offset_bottom = 162.333
-theme_override_fonts/font = ExtResource("9_0tnpc")
-text = "Press R to restart"
-
 [node name="hud_bg" type="Panel" parent="."]
 z_index = 9
 offset_left = 268.0

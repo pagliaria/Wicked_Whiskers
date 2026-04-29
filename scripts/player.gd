@@ -3,6 +3,7 @@ extends CharacterBody2D
 const SPEED = 130.0
 const THROW_SPEED = 300
 const SPIN_SPEED = 2000
+const GAME_OVER_MENU = preload("res://scenes/game_over_menu.tscn")
 
 @onready var throw: AudioStreamPlayer2D = $throw
 @onready var squish: AudioStreamPlayer2D = $squish
@@ -257,7 +258,13 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		death_timer.start(3)
 
 func display_restart():
-	get_parent().get_node("restart").visible = true
+	var canvas := CanvasLayer.new()
+	canvas.layer = 30
+	get_tree().current_scene.add_child(canvas)
+
+	var game_over_menu = GAME_OVER_MENU.instantiate()
+	game_over_menu.canvas_layer = canvas
+	canvas.add_child(game_over_menu)
 
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.get_parent() == current_item_in_range:

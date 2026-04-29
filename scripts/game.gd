@@ -50,7 +50,6 @@ func _ready() -> void:
 			if spawn.name == str(index):
 				current_player.global_position = spawn.global_position
 		
-	#set_players_visibility(false)
 	show_night_intro()
 	
 func set_players_visibility(vis: bool):
@@ -189,7 +188,6 @@ func _on_night_intro_finished(intro_layer: CanvasLayer) -> void:
 
 	get_tree().paused = false
 	new_night(Enums.get_night())
-	#set_players_visibility(true)
 
 @rpc("any_peer", "call_local")
 func advance_to_next_night() -> void:
