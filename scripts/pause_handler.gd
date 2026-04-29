@@ -20,10 +20,14 @@ func _input(event: InputEvent) -> void:
 				get_parent().clean_up()
 				next_day.rpc()
 
-	if event.is_pressed() && event.as_text() == "Escape":
+	if event.is_action_pressed("pause"):
 		if is_inside_tree():
-			#get_tree().paused = true
-			get_tree().root.add_child(pause_menu.instantiate())
+			var pm = pause_menu.instantiate()
+			var canvas = CanvasLayer.new()
+			canvas.layer = 10
+			get_tree().current_scene.add_child(canvas)
+			canvas.add_child(pm)
+			pm.canvas_layer = canvas
 
 @rpc("any_peer","call_local")
 func reset():

@@ -79,6 +79,10 @@ theme = ExtResource("3_theme")
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 16
 text = "EASY"
+focus_neighbor_top = NodePath("../../HardCenter/HardButton")
+focus_neighbor_bottom = NodePath("../../NormalCenter/NormalButton")
+focus_previous = NodePath("../../HardCenter/HardButton")
+focus_next = NodePath("../../NormalCenter/NormalButton")
 
 [node name="EasyDesc" type="Label" parent="Panel/VBox"]
 layout_mode = 2
@@ -102,6 +106,10 @@ theme = ExtResource("3_theme")
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 16
 text = "NORMAL"
+focus_neighbor_top = NodePath("../../EasyCenter/EasyButton")
+focus_neighbor_bottom = NodePath("../../HardCenter/HardButton")
+focus_previous = NodePath("../../EasyCenter/EasyButton")
+focus_next = NodePath("../../HardCenter/HardButton")
 
 [node name="NormalDesc" type="Label" parent="Panel/VBox"]
 layout_mode = 2
@@ -125,6 +133,10 @@ theme = ExtResource("3_theme")
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 16
 text = "HARD"
+focus_neighbor_top = NodePath("../../NormalCenter/NormalButton")
+focus_neighbor_bottom = NodePath("../../EasyCenter/EasyButton")
+focus_previous = NodePath("../../NormalCenter/NormalButton")
+focus_next = NodePath("../../EasyCenter/EasyButton")
 
 [node name="HardDesc" type="Label" parent="Panel/VBox"]
 layout_mode = 2
