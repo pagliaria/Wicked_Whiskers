@@ -24,6 +24,7 @@ extends Node2D
 @onready var coin_end: Node2D = $coin_end
 @onready var hell_dog: CharacterBody2D = $hell_dog
 @onready var dog_house: StaticBody2D = $dog_house
+@onready var night_modulate: CanvasModulate = $night_modulate
 
 var players = []
 var cat_spawns = []
@@ -160,7 +161,17 @@ func add_pumpkin_patchs(n: int):
 		var position_node = pumpkin_spawn_locations.get_node(str(location))
 		patch_scene.global_position = position_node.global_position
 
+func _apply_night_tint(night_num: int) -> void:
+	match night_num:
+		1:
+			night_modulate.color = Color(1.0, 0.96, 0.88, 1.0)  # soft amber - calm harvest night
+		2:
+			night_modulate.color = Color(0.88, 0.92, 1.0, 1.0)  # subtle blue - eerie midnight
+		3:
+			night_modulate.color = Color(1.0, 0.80, 0.85, 1.0)  # gentle red - hellish finale
+
 func new_night(d: int):
+	_apply_night_tint(d)
 	night_start_time = Time.get_unix_time_from_system()
 	_total_paused_duration = 0.0
 	_paused_at = -1.0

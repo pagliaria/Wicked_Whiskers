@@ -25,7 +25,8 @@ Halloween co-op pumpkin carving game. Players grow pumpkins, bring them to colou
 | `difficulty_select.tscn` | Popup shown before starting — sets `Enums.difficulty` |
 | `multiplayer_menu.tscn` | Host/join popup, separated from main menu |
 | `how_to_play.tscn` | Scrollable reference dialog |
-| `order.tscn` | Individual order card — has `SelectedIndicator` label for controller highlight |
+| `win_screen.tscn` | End-game win screen — shows final stats, Play Again / Main Menu buttons |
+| `order.tscn` | Individual order card — has `SelectedIndicator` label for controller highlight, `patience_icon` TextureRect for customer mood |
 
 ### Popup Pattern
 All popups (pause, how-to-play, difficulty, multiplayer, night intro) follow the same pattern:
@@ -89,7 +90,7 @@ Call `Enums.get_order_timeout(night, player_count)` and `Enums.get_spawn_interva
 ---
 
 ## Per-Night Stats (`Enums` / `Global.gd`)
-Tracked each night, reset at the start of every new night via `Enums.reset_night_stats()` (called in `game.gd` → `new_night()`):
+Tracked each night, reset at the start of every new night via `Enums.reset_night_stats()` (called in `game.gd` → `new_night()`). `reset_night_stats()` also accumulates into the cumulative totals before zeroing.
 
 | Variable | Incremented in | When |
 |---|---|---|
@@ -97,6 +98,10 @@ Tracked each night, reset at the start of every new night via `Enums.reset_night
 | `orders_failed` | `customer.gd` | `wrong_order` set on remove timer timeout |
 | `coins_earned_this_night` | `customer.gd` | Coins spawned on correct delivery |
 | `score_earned_this_night` | `customer.gd` | Score awarded on correct delivery |
+| `total_orders_completed` | `reset_night_stats()` + `day_end()` | Cumulative across all nights |
+| `total_orders_failed` | `reset_night_stats()` + `day_end()` | Cumulative across all nights |
+
+Note: Night 3 never calls `reset_night_stats()` (game ends). `day_end()` manually accumulates Night 3 stats into the totals before showing the win screen.
 
 ---
 
@@ -151,10 +156,23 @@ Two inline Label nodes on each customer (both use `PixelOperator8-Bold.ttf`, sta
 ## Order Card Warning Pulse (`order_display.gd`)
 When order progress ≥ 75%:
 - Panel background lerps to `COLOR_PANEL_WARN = Color(0.45, 0.08, 0.08, 1.0)` via sine wave
-- Progress bar fill lerps to `COLOR_FILL_WARN = Color(0.95, 0.15, 0.15, 1.0)`
 - Four StyleBox variants kept in sync: `_normal_style`, `_selected_style`, `_warning_style`, `_warning_selected_style`
 - `set_selected()` must always check `_pulsing` to pick the right stylebox — never unconditionally apply `_selected_style`
 - `_stop_pulse()` is the single cleanup path; also calls `_set_customer_warning(false)`
+
+## Customer Patience Icon (`order_display.gd`, `order.tscn`)
+Progress bar replaced with a `patience_icon` TextureRect that swaps through 4 emotion icons from `assets/emotion_icons/`:
+
+| Progress elapsed | Icon |
+|---|---|
+| 0–25% | `happy.png` |
+| 25–50% | `smile.png` |
+| 50–75% | `sad.png` |
+| 75–100% | `angry.png` |
+
+- Icon only swaps on threshold change (`_last_emotion` guard) — no per-frame texture churn
+- At 75%+ the panel pulse also kicks in, so angry face + red pulse happen together
+- All 4 textures preloaded as constants in `order_display.gd`
 
 ---
 
@@ -167,4 +185,4 @@ When order progress ≥ 75%:
 - **Don't use `Time.get_unix_time_from_system()` alone for in-game timers** — always subtract `_total_paused_duration`
 - **Don't call `get_most_urgent_order_number()` immediately after submitting** — the submitted order is still in the dict; use the `_excluding` variant
 - **Don't unconditionally apply `_selected_style` in `set_selected()`** — check `_pulsing` first or the warning pulse will be wiped
-- **Don't forget `reset_night_stats()` when adding new per-night tracking** — it's called in `new_night()` in `game.gd`
+- **Don't forget `reset_night_stats()` when adding new per-night tracking** — it's called in `new_night()` in `game.gd`; also manually accumulate Night 3 stats in `day_end()` for any cumulative totals

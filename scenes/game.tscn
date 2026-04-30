@@ -5239,6 +5239,9 @@ patch = ExtResource("8_0tnpc")
 night_intro_scene = ExtResource("26_nightintro")
 win_screen_scene = ExtResource("27_winscreen")
 
+[node name="night_modulate" type="CanvasModulate" parent="."]
+color = Color(1, 0.85098, 0.6, 1)
+
 [node name="pause_handler" parent="." instance=ExtResource("3_dinhu")]
 
 [node name="level" type="TileMap" parent="."]
