@@ -18,15 +18,15 @@
 [ext_resource type="Texture2D" uid="uid://75i4rhdr061o" path="res://assets/Tiles/Slice 25.png" id="14_264po"]
 [ext_resource type="Texture2D" uid="uid://btxviwfjvggrp" path="res://assets/Tiles/Slice 24.png" id="15_1kice"]
 [ext_resource type="Texture2D" uid="uid://ctfy6siily1lh" path="res://assets/Tiles/Slice 23.png" id="16_5newe"]
-[ext_resource type="AudioStream" uid="uid://dh1aa0cfuykdr" path="res://assets/music/spookmix.mp3" id="17_pl11u"]
 [ext_resource type="PackedScene" uid="uid://c5ikwbxtyioto" path="res://scenes/witch_hat_table.tscn" id="19_1kice"]
 [ext_resource type="PackedScene" uid="uid://b2turaxy54f0f" path="res://scenes/cap_table.tscn" id="19_bt5mj"]
+[ext_resource type="AudioStream" uid="uid://dvdueo8j7q4hw" path="res://assets/music/spooky_tune.mp3" id="19_qnb83"]
 [ext_resource type="PackedScene" uid="uid://bpnelqrhs3f7h" path="res://scenes/cowboy_table.tscn" id="20_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://bg78n2u0rl72p" path="res://scenes/sombraro_table.tscn" id="21_pl11u"]
 [ext_resource type="PackedScene" uid="uid://d1d7ksox31ymj" path="res://scenes/dog_house.tscn" id="24_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://lbykn7w2lgbx" path="res://scenes/hell_dog.tscn" id="25_pl11u"]
 [ext_resource type="PackedScene" uid="uid://dc4qfddm3aaia" path="res://scenes/night_intro.tscn" id="26_nightintro"]
-[ext_resource type="PackedScene" path="res://scenes/win_screen.tscn" id="27_winscreen"]
+[ext_resource type="PackedScene" uid="uid://c1hlpedy4n4ep" path="res://scenes/win_screen.tscn" id="27_winscreen"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -5276,7 +5276,7 @@ position = Vector2(148, 37)
 metadata/Type = "surprised"
 
 [node name="music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("17_pl11u")
+stream = ExtResource("19_qnb83")
 volume_db = -15.0
 autoplay = true
 parameters/looping = true
@@ -5308,6 +5308,7 @@ position = Vector2(-301, 65)
 shape = SubResource("RectangleShape2D_u5sy4")
 
 [node name="orders" parent="." instance=ExtResource("8_gee14")]
+z_index = 5
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0

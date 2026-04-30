@@ -2,7 +2,7 @@ extends Control
 
 var order_time
 var _order_number: int = -1
-@onready var progress_bar: ProgressBar = $Panel/ProgressBar
+@onready var patience_icon: TextureRect = $Panel/patience_icon
 @onready var item_number: Label = $Panel/item_number
 @onready var happy: TextureRect = $Panel/happy
 @onready var angry: TextureRect = $Panel/angry
@@ -16,17 +16,23 @@ const COWBOY = preload("res://assets/sprites/hats/cowboy.png")
 const SOMBRARO = preload("res://assets/sprites/hats/sombraro.png")
 const WITCH_HAT = preload("res://assets/sprites/hats/witch_hat.png")
 
+const EMO_HAPPY  = preload("res://assets/emotion_icons/needcoffee-Mostrichgrinser-happy.png")
+const EMO_SMILE  = preload("res://assets/emotion_icons/needcoffee-Mostrichgrinser-smile.png")
+const EMO_SAD    = preload("res://assets/emotion_icons/needcoffee-Mostrichgrinser-sad.png")
+const EMO_ANGRY  = preload("res://assets/emotion_icons/needcoffee-Mostrichgrinser-angry.png")
+
+var _last_emotion: Texture2D = null
+
 # Grab the original stylebox from the scene before we ever override it
 var _normal_style: StyleBoxFlat
 var _selected_style: StyleBoxFlat
 var _warning_style: StyleBoxFlat
 var _warning_selected_style: StyleBoxFlat
-var _pulse_fill_style: StyleBoxFlat
+var _pulse_fill_style: StyleBoxFlat  # kept for warning panel pulse — no longer used for bar fill
 
 const WARNING_THRESHOLD = 75.0  # progress % at which pulsing begins
 const PULSE_SPEED = 4.0         # oscillations per second
 const COLOR_PANEL_WARN = Color(0.45, 0.08, 0.08, 1.0)
-const COLOR_FILL_WARN  = Color(0.95, 0.15, 0.15, 1.0)
 
 var _pulsing := false
 var _pulse_time := 0.0
@@ -57,26 +63,25 @@ func _ready() -> void:
 	_warning_selected_style = _selected_style.duplicate()
 	_warning_selected_style.bg_color = COLOR_PANEL_WARN
 
-	# Warning fill style — duplicated from the progress bar's current fill
-	_pulse_fill_style = progress_bar.get_theme_stylebox("fill").duplicate()
+	# Set starting emotion icon
+	_set_emotion(0.0)
 
 func _process(delta: float) -> void:
 	var progress: float = ((Time.get_unix_time_from_system() - order_time - pause_time) / Enums.ORDER_TIMEOUT_SEC) * 100
-	progress_bar.value = progress
+	_set_emotion(progress)
 
 	if progress >= WARNING_THRESHOLD:
 		_pulse_time += delta
 		if not _pulsing:
 			_pulsing = true
 			panel.add_theme_stylebox_override("panel", _warning_style)
-			progress_bar.add_theme_stylebox_override("fill", _pulse_fill_style)
+			#progress_bar.add_theme_stylebox_override("fill", _pulse_fill_style)
 			_set_customer_warning(true)
 		# Sine wave: 0.0 → 1.0 → 0.0, PULSE_SPEED times per second
 		var t: float = (sin(_pulse_time * PULSE_SPEED * TAU) + 1.0) * 0.5
 		var warn_bg = _normal_style.bg_color.lerp(COLOR_PANEL_WARN, t)
 		_warning_style.bg_color = warn_bg
 		_warning_selected_style.bg_color = warn_bg
-		_pulse_fill_style.bg_color = Color(0.977949, 0.230255, 0.769886, 1).lerp(COLOR_FILL_WARN, t)
 	elif _pulsing:
 		# Progress went back below threshold (shouldn't normally happen, but be safe)
 		_stop_pulse()
@@ -104,8 +109,21 @@ func _stop_pulse() -> void:
 	_pulsing = false
 	_pulse_time = 0.0
 	panel.add_theme_stylebox_override("panel", _normal_style)
-	progress_bar.remove_theme_stylebox_override("fill")
 	_set_customer_warning(false)
+
+func _set_emotion(progress: float) -> void:
+	var tex: Texture2D
+	if progress < 25.0:
+		tex = EMO_HAPPY
+	elif progress < 50.0:
+		tex = EMO_SMILE
+	elif progress < 75.0:
+		tex = EMO_SAD
+	else:
+		tex = EMO_ANGRY
+	if tex != _last_emotion:
+		patience_icon.texture = tex
+		_last_emotion = tex
 
 func _set_customer_warning(active: bool) -> void:
 	if _order_number == -1:

@@ -185,7 +185,8 @@ script = ExtResource("1_xss0h")
 
 [node name="order_bubble" parent="." instance=ExtResource("2_qqxhk")]
 visible = false
-position = Vector2(19, -24)
+position = Vector2(16, -18)
+scale = Vector2(0.035, 0.035)
 
 [node name="ghost" type="AnimatedSprite2D" parent="."]
 z_index = 2
@@ -235,10 +236,10 @@ stream = ExtResource("4_rjbu2")
 [node name="wrong_label" type="Label" parent="."]
 visible = false
 z_index = 10
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-offset_bottom = -20.0
+offset_left = -33.0
+offset_top = -32.0
+offset_right = 38.0
+offset_bottom = -19.0
 theme_override_colors/font_color = Color(1, 0.1, 0.1, 1)
 theme_override_fonts/font = ExtResource("font_pixel")
 theme_override_font_sizes/font_size = 12
@@ -248,14 +249,14 @@ horizontal_alignment = 1
 [node name="warn_indicator" type="Label" parent="."]
 visible = false
 z_index = 10
-offset_left = -20.0
-offset_top = -54.0
-offset_right = 20.0
-offset_bottom = -40.0
+offset_left = -8.0
+offset_top = -30.0
+offset_right = 7.0
+offset_bottom = -16.0
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_fonts/font = ExtResource("font_pixel")
 theme_override_font_sizes/font_size = 12
-text = "!!!"
+text = "!"
 horizontal_alignment = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

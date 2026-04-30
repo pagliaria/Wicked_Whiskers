@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://win_screen_scene1"]
+[gd_scene load_steps=5 format=3 uid="uid://c1hlpedy4n4ep"]
 
-[ext_resource type="Script" path="res://scripts/win_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cmkv0l461ohf4" path="res://scripts/win_screen.gd" id="1_script"]
 [ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_font"]
 [ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="3_theme"]
 
@@ -32,7 +32,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0, 0.0, 0.0, 0.82)
+color = Color(0, 0, 0, 0.82)
 
 [node name="Panel" type="Panel" parent="Background"]
 layout_mode = 1
@@ -87,7 +87,6 @@ layout_mode = 2
 theme_override_constants/h_separation = 60
 theme_override_constants/v_separation = 14
 columns = 2
-alignment = 1
 
 [node name="TotalScoreKey" type="Label" parent="Background/Panel/VBox/StatsCenter/StatsGrid"]
 layout_mode = 2
@@ -155,8 +154,8 @@ layout_mode = 2
 
 [node name="ButtonRow" type="HBoxContainer" parent="Background/Panel/VBox"]
 layout_mode = 2
-alignment = 1
 theme_override_constants/separation = 24
+alignment = 1
 
 [node name="PlayAgainButton" type="Button" parent="Background/Panel/VBox/ButtonRow"]
 custom_minimum_size = Vector2(200, 48)

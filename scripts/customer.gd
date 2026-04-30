@@ -61,6 +61,7 @@ func _process(delta: float) -> void:
 		
 		if progress_bar.value >= 100 || wrong_order:
 			#problems!
+			warn_indicator.visible = false
 			if !attacking:
 				play_sound.rpc(scream.get_path())
 				animation.modulate = Color(1, 0, 0, 0.8)
@@ -141,7 +142,7 @@ func add_order(ht:Enums.HatType, it: Enums.OrderType, cust_path: String, time: f
 	order_bubble.set_type(order.get_order_type())
 	order_bubble.set_hat(order.get_order_hat())
 	ordered = true
-	progress_bar.visible = true
+	#progress_bar.visible = true
 
 func _on_timer_timeout() -> void:
 	direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()

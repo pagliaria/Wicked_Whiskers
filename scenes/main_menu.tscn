@@ -7,7 +7,7 @@
 [ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="5_buttons"]
 [ext_resource type="PackedScene" uid="uid://dm4b8q7rnxhat" path="res://scenes/how_to_play.tscn" id="7_htp"]
 [ext_resource type="PackedScene" uid="uid://dggpssc6m7x6t" path="res://scenes/difficulty_select.tscn" id="8_diff"]
-[ext_resource type="AudioStream" uid="uid://dvdueo8j7q4hw" path="res://assets/music/spooky_tune.mp3" id="9_jk1qb"]
+[ext_resource type="AudioStream" uid="uid://dh1aa0cfuykdr" path="res://assets/music/spookmix.mp3" id="9_jk1qb"]
 [ext_resource type="PackedScene" uid="uid://bw4fdmn0xuqjf" path="res://scenes/multiplayer_menu.tscn" id="9_mp"]
 
 [node name="MainMenu" type="Control"]
