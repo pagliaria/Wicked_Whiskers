@@ -14,6 +14,7 @@ const COIN = preload("res://scenes/coin.tscn")
 @onready var scream: AudioStreamPlayer2D = $scream
 @onready var order_bubble: Sprite2D = $order_bubble
 @onready var wrong_label: Label = $wrong_label
+@onready var warn_indicator: Label = $warn_indicator
 
 var problems = false
 var wrong_order = false
@@ -30,10 +31,20 @@ var hit_item: RigidBody2D = null
 var order_number = 0
 var order: Order = null
 var dog = null
+var _urgent := false
+var _urgent_pulse_time := 0.0
+var pause_time = 0.0
+
+func add_pause_time(time: float):
+	pause_time = time
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	
+	if _urgent && warn_indicator.visible:
+		_urgent_pulse_time += delta
+		var t: float = (sin(_urgent_pulse_time * 4.0 * TAU) + 1.0) * 0.5
+		warn_indicator.modulate = Color(1.0, lerp(0.85, 0.3, t), lerp(0.2, 0.0, t), 1.0)
 	if !is_multiplayer_authority():
 		return
 	
@@ -43,7 +54,7 @@ func _process(_delta: float) -> void:
 		generateOrder()
 		
 	if ordered:
-		progress_bar.value = ((Time.get_unix_time_from_system() - order_time) / Enums.ORDER_TIMEOUT_SEC) * 100
+		progress_bar.value = ((Time.get_unix_time_from_system() - order_time - pause_time) / Enums.ORDER_TIMEOUT_SEC) * 100
 		#print("progress: ", progress_bar.value)
 		#bubble_scene_instance.global_position.x = global_position.x + 20
 		#bubble_scene_instance.global_position.y =global_position.y - 30
@@ -168,6 +179,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		hit_by_order = true
 		order_bubble.visible = false
 		problems = false
+		set_urgent(false)
 		remove_timer.start(2)
 		speed = 0
 		animation.rotation += deg_to_rad(90)
@@ -207,6 +219,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				hit_by_order = true
 				order_bubble.visible = false
 				problems = false
+				set_urgent(false)
 			remove_timer.start(1)
 
 @rpc("any_peer", "call_local")
@@ -222,6 +235,13 @@ func show_wrong_feedback():
 	tween.tween_property(wrong_label, "position", origin, SHAKE_STEP)
 	tween.tween_property(wrong_label, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(func(): wrong_label.visible = false; wrong_label.modulate.a = 1.0)
+
+func set_urgent(active: bool) -> void:
+	_urgent = active
+	_urgent_pulse_time = 0.0
+	warn_indicator.visible = active
+	if active:
+		warn_indicator.modulate = Color(1.0, 0.85, 0.2, 1.0)
 
 @rpc("any_peer","call_local")
 func play_sound(node):

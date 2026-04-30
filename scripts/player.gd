@@ -92,12 +92,13 @@ func _try_submit_order(num: int) -> void:
 		current_held_item.lock_rotation = false
 		throw_order = true
 		# Auto-select the most urgent remaining order after submitting
-		var remaining = OrderManager.orders.keys()
-		remaining.erase(num)
-		if remaining.is_empty():
+		# Pass the submitted number so urgency check excludes it (it's still
+		# in OrderManager.orders until the pumpkin physically hits the customer)
+		var next = OrderManager.get_most_urgent_order_number_excluding(num)
+		if next == -1:
 			OrderManager.highlight_order(-1)
 		else:
-			selected_order = OrderManager.get_most_urgent_order_number()
+			selected_order = next
 			OrderManager.highlight_order(selected_order)
 
 func _handle_interact() -> void:

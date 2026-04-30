@@ -29,6 +29,8 @@ var cat_spawns = []
 var orderTime
 var night_start_time
 var transitioning_to_next_night = false
+var _paused_at: float = -1.0
+var _total_paused_duration: float = 0.0
 
 func _ready() -> void:
 	dog_house.set_dog(hell_dog)
@@ -74,13 +76,23 @@ func _on_spawn_timer_timeout() -> void:
 	customer_scene_instance.global_position = customer_spwan_point.global_position
 
 func _process(_delta: float) -> void:
-	progress_bar.value = ((Time.get_unix_time_from_system() - night_start_time) / Enums.get_night_time()) * 100
+	var elapsed = (Time.get_unix_time_from_system() - night_start_time) - _total_paused_duration
+	progress_bar.value = (elapsed / Enums.get_night_time()) * 100
 	coins_amount.text = str(Enums.coins)
 	score_amount.text = str(Enums.score)
 	
-	if progress_bar.value == 100 && !transitioning_to_next_night:
+	if progress_bar.value >= 100 && !transitioning_to_next_night:
 		Enums.set_passed(true)
 		day_end()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PAUSED:
+		_paused_at = Time.get_unix_time_from_system()
+	elif what == NOTIFICATION_UNPAUSED:
+		if _paused_at > 0.0:
+			_total_paused_duration += Time.get_unix_time_from_system() - _paused_at
+			OrderManager.add_paused_time(_total_paused_duration)
+			_paused_at = -1.0
 
 func day_end():
 	transitioning_to_next_night = true
@@ -138,6 +150,8 @@ func add_pumpkin_patchs(n: int):
 
 func new_night(d: int):
 	night_start_time = Time.get_unix_time_from_system()
+	_total_paused_duration = 0.0
+	_paused_at = -1.0
 	night.text = "Night " + str(Enums.get_night())
 	var player_count = MultiplayerManager.Players.size()
 
