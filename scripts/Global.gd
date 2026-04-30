@@ -1,7 +1,7 @@
 extends Node
 
 var night = 1
-var night_time_sec = 120
+var night_time_sec = 20
 var ORDER_TIMEOUT_SEC = 30
 var coins = 0
 var score = 0
@@ -14,7 +14,13 @@ var orders_failed: int = 0
 var coins_earned_this_night: int = 0
 var score_earned_this_night: int = 0
 
+# Cumulative totals across all nights
+var total_orders_completed: int = 0
+var total_orders_failed: int = 0
+
 func reset_night_stats() -> void:
+	total_orders_completed += orders_completed
+	total_orders_failed += orders_failed
 	orders_completed = 0
 	orders_failed = 0
 	coins_earned_this_night = 0

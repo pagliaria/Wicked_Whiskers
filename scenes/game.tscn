@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://ca0i1oa70m5ki"]
+[gd_scene load_steps=47 format=3 uid="uid://ca0i1oa70m5ki"]
 
 [ext_resource type="Script" uid="uid://dglcspbyyrvwh" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://dyaxfw0dpj4fc" path="res://scenes/player.tscn" id="1_uwrxv"]
@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://d1d7ksox31ymj" path="res://scenes/dog_house.tscn" id="24_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://lbykn7w2lgbx" path="res://scenes/hell_dog.tscn" id="25_pl11u"]
 [ext_resource type="PackedScene" uid="uid://dc4qfddm3aaia" path="res://scenes/night_intro.tscn" id="26_nightintro"]
+[ext_resource type="PackedScene" path="res://scenes/win_screen.tscn" id="27_winscreen"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -5236,6 +5237,7 @@ customer = ExtResource("2_u5sy4")
 cat = ExtResource("4_lbhrr")
 patch = ExtResource("8_0tnpc")
 night_intro_scene = ExtResource("26_nightintro")
+win_screen_scene = ExtResource("27_winscreen")
 
 [node name="pause_handler" parent="." instance=ExtResource("3_dinhu")]
 

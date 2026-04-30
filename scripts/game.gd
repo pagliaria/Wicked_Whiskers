@@ -5,6 +5,7 @@ extends Node2D
 @export var cat: PackedScene
 @export var patch: PackedScene
 @export var night_intro_scene: PackedScene
+@export var win_screen_scene: PackedScene
 
 @onready var night_timer: Timer = $night_timer
 @onready var progress_bar: ProgressBar = $ProgressBar
@@ -100,8 +101,19 @@ func day_end():
 	spawn_timer.stop()
 	OrderManager.clear_all_orders()
 	if Enums.get_night() == 3:
-		win.visible = true
+		Enums.total_orders_completed += Enums.orders_completed
+		Enums.total_orders_failed += Enums.orders_failed
 		get_tree().paused = true
+		if win_screen_scene != null:
+			var win_layer := CanvasLayer.new()
+			win_layer.layer = 20
+			win_layer.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+			add_child(win_layer)
+			var win_screen = win_screen_scene.instantiate()
+			win_screen.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+			win_layer.add_child(win_screen)
+		else:
+			win.visible = true
 	else:
 		if is_multiplayer_authority():
 			clean_up()
