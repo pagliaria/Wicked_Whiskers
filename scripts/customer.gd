@@ -216,6 +216,9 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 							Enums.score += points
 							print("Score +%d (time: %.2f, dist: %.2f) = %d" % [points, time_ratio, dist_bonus, Enums.score])
 				OrderManager.remove_order.rpc(order_number)
+				var player_node = body.get_player()
+				if player_node != null && player_node.has_method("select_next_order"):
+					var data = player_node.select_next_order()
 				hit_by_order = true
 				order_bubble.visible = false
 				problems = false

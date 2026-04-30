@@ -91,15 +91,6 @@ func _try_submit_order(num: int) -> void:
 		current_held_item.set_player.rpc(self.get_path())
 		current_held_item.lock_rotation = false
 		throw_order = true
-		# Auto-select the most urgent remaining order after submitting
-		# Pass the submitted number so urgency check excludes it (it's still
-		# in OrderManager.orders until the pumpkin physically hits the customer)
-		var next = OrderManager.get_most_urgent_order_number_excluding(num)
-		if next == -1:
-			OrderManager.highlight_order(-1)
-		else:
-			selected_order = next
-			OrderManager.highlight_order(selected_order)
 
 func _handle_interact() -> void:
 	if current_cat_in_range != null && current_held_item != null && !current_held_item.name.contains("jack") && !current_cat_in_range.is_busy():
@@ -141,6 +132,17 @@ func _handle_interact() -> void:
 		change_mask.rpc(path, 10, false)
 		change_layer.rpc(path, 10, false)
 		current_held_item = null
+
+func select_next_order():
+	# Auto-select the most urgent remaining order after submitting
+	# Pass the submitted number so urgency check excludes it (it's still
+	# in OrderManager.orders until the pumpkin physically hits the customer)
+	var next = OrderManager.get_most_urgent_order_number()
+	if next == -1:
+		OrderManager.highlight_order(-1)
+	else:
+		selected_order = next
+		OrderManager.highlight_order(selected_order)
 
 func consume_throw_score_data() -> Dictionary:
 	if _throw_order_num == -1:
