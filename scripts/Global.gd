@@ -8,6 +8,18 @@ var score = 0
 var coin_counter_pos
 var night_passed = false
 
+# Per-night stats — reset at the start of each night
+var orders_completed: int = 0
+var orders_failed: int = 0
+var coins_earned_this_night: int = 0
+var score_earned_this_night: int = 0
+
+func reset_night_stats() -> void:
+	orders_completed = 0
+	orders_failed = 0
+	coins_earned_this_night = 0
+	score_earned_this_night = 0
+
 enum HatType {
 	NONE,
 	WITCH,

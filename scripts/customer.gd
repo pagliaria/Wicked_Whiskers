@@ -202,6 +202,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				if is_multiplayer_authority():
 					var i = randi_range(3,10)
 					spawn_coins.rpc(i)
+					Enums.coins_earned_this_night += i
 					# Award score based on time remaining and throw distance
 					var player_node = body.get_player()
 					if player_node != null && player_node.has_method("consume_throw_score_data"):
@@ -214,8 +215,10 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 							var dist_bonus = clamp(1.0 + (dist / MAX_DISTANCE), 1.0, 2.0)
 							var points = int(BASE_POINTS * time_ratio * dist_bonus)
 							Enums.score += points
+							Enums.score_earned_this_night += points
 							print("Score +%d (time: %.2f, dist: %.2f) = %d" % [points, time_ratio, dist_bonus, Enums.score])
 				OrderManager.remove_order.rpc(order_number)
+				Enums.orders_completed += 1
 				var player_node = body.get_player()
 				if player_node != null && player_node.has_method("select_next_order"):
 					var data = player_node.select_next_order()
@@ -265,6 +268,7 @@ func _on_remove_timer_timeout() -> void:
 		hit_item.queue_free()
 	if problems:
 		wrong_order = true
+		Enums.orders_failed += 1
 	else:
 		if is_multiplayer_authority():
 			queue_free()

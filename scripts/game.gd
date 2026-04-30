@@ -152,6 +152,7 @@ func new_night(d: int):
 	night_start_time = Time.get_unix_time_from_system()
 	_total_paused_duration = 0.0
 	_paused_at = -1.0
+	Enums.reset_night_stats()
 	night.text = "Night " + str(Enums.get_night())
 	var player_count = MultiplayerManager.Players.size()
 

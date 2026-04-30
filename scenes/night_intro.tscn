@@ -61,7 +61,132 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.04, 0.02, 0.08, 0.92)
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="StatsPanel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="StatsPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -180.0
+offset_right = 220.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="NightLabel" type="Label" parent="StatsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 40
+text = "Night 1 Complete!"
+horizontal_alignment = 1
+
+[node name="Divider" type="HSeparator" parent="StatsPanel/VBox"]
+layout_mode = 2
+
+[node name="StatsGrid" type="GridContainer" parent="StatsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="CompletedKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Orders Completed"
+
+[node name="CompletedVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.4, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="FailedKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Orders Failed"
+
+[node name="FailedVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.35, 0.35, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="CoinsKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Coins Earned"
+
+[node name="CoinsVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="ScoreKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Score"
+
+[node name="ScoreVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="ContinueCenter" type="CenterContainer" parent="StatsPanel/VBox"]
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="StatsPanel/VBox/ContinueCenter"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "NEXT NIGHT"
+
+[node name="IntroPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="IntroPanel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -77,7 +202,7 @@ grow_vertical = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="NightLabel" type="Label" parent="VBox"]
+[node name="NightLabel" type="Label" parent="IntroPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_fonts/font = ExtResource("2_font")
@@ -85,18 +210,18 @@ theme_override_font_sizes/font_size = 52
 text = "Night 1"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="VBox"]
+[node name="SubtitleLabel" type="Label" parent="IntroPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="VBox"]
+[node name="Spacer" type="Control" parent="IntroPanel/VBox"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="TipLabel" type="Label" parent="VBox"]
+[node name="TipLabel" type="Label" parent="IntroPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
 theme_override_fonts/font = ExtResource("2_font")
@@ -104,14 +229,14 @@ theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Spacer2" type="Control" parent="VBox"]
+[node name="Spacer2" type="Control" parent="IntroPanel/VBox"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BeginCenter" type="CenterContainer" parent="VBox"]
+[node name="BeginCenter" type="CenterContainer" parent="IntroPanel/VBox"]
 layout_mode = 2
 
-[node name="BeginButton" type="Button" parent="VBox/BeginCenter"]
+[node name="BeginButton" type="Button" parent="IntroPanel/VBox/BeginCenter"]
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 theme = ExtResource("3_theme")
@@ -124,4 +249,5 @@ libraries = {
 &"": SubResource("AnimationLibrary_1")
 }
 
-[connection signal="pressed" from="VBox/BeginCenter/BeginButton" to="." method="_on_begin_pressed"]
+[connection signal="pressed" from="StatsPanel/VBox/ContinueCenter/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="IntroPanel/VBox/BeginCenter/BeginButton" to="." method="_on_begin_pressed"]
