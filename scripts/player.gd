@@ -4,6 +4,7 @@ const SPEED = 130.0
 const THROW_SPEED = 300
 const SPIN_SPEED = 2000
 const GAME_OVER_MENU = preload("res://scenes/game_over_menu.tscn")
+const COIN_TEXTURE = preload("res://assets/sprites/coin.png")
 
 @onready var throw: AudioStreamPlayer2D = $throw
 @onready var squish: AudioStreamPlayer2D = $squish
@@ -288,6 +289,8 @@ func ghost_caught(ghost_path: String) -> void:
 	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		Enums.coins = max(0, Enums.coins - COIN_PENALTY)
 		Enums.total_times_caught += 1
+		_spawn_coin_stolen_label()
+		_flash_coin_hud()
 	# Flash the sprite red briefly
 	_stunned = true
 	_stun_timer = STUN_DURATION
@@ -298,6 +301,56 @@ func ghost_caught(ghost_path: String) -> void:
 	# Tell the ghost to retreat
 	if has_node(ghost_path):
 		get_node(ghost_path).retreat.rpc()
+
+func _spawn_coin_stolen_label() -> void:
+	var popup := HBoxContainer.new()
+	popup.z_index = 40
+	popup.top_level = true
+	popup.global_position = global_position + Vector2(-16, -30)
+	popup.modulate = Color(1, 1, 1, 1)
+	popup.scale = Vector2(0.7, 0.7)
+	popup.alignment = BoxContainer.ALIGNMENT_CENTER
+	popup.add_theme_constant_override("separation", 4)
+	get_tree().current_scene.add_child(popup)
+
+	var coin_atlas := AtlasTexture.new()
+	coin_atlas.atlas = COIN_TEXTURE
+	coin_atlas.region = Rect2(0, 0, 16, 16)
+
+	var icon := TextureRect.new()
+	icon.texture = coin_atlas
+	icon.custom_minimum_size = Vector2(16, 16)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	popup.add_child(icon)
+
+	var label := Label.new()
+	label.text = "-%d" % COIN_PENALTY
+	label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.25, 1.0))
+	label.add_theme_color_override("font_outline_color", Color(0.15, 0.0, 0.0, 1.0))
+	label.add_theme_constant_override("outline_size", 3)
+	label.add_theme_font_size_override("font_size", 10)
+	popup.add_child(label)
+
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(popup, "global_position", popup.global_position + Vector2(0, -22), 0.75)
+	tween.tween_property(popup, "modulate:a", 0.0, 0.75)
+	tween.tween_property(popup, "scale", Vector2.ONE, 0.2)
+	tween.chain().tween_callback(func(): if is_instance_valid(popup): popup.queue_free())
+
+func _flash_coin_hud() -> void:
+	var coins_label: Label = get_tree().current_scene.get_node_or_null("coins_amount")
+	if coins_label == null:
+		return
+
+	var original_color = coins_label.modulate
+	var original_scale = coins_label.scale
+	var tween = create_tween()
+	tween.tween_property(coins_label, "modulate", Color(1.0, 0.3, 0.25, 1.0), 0.1)
+	tween.parallel().tween_property(coins_label, "scale", original_scale * 1.25, 0.1)
+	tween.tween_property(coins_label, "modulate", original_color, 0.2)
+	tween.parallel().tween_property(coins_label, "scale", original_scale, 0.2)
 
 func _tick_stun(delta: float) -> void:
 	if _stunned:
