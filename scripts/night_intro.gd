@@ -37,8 +37,28 @@ const SUBTITLES = [
 const TIPS = [
 	"Tip: Match the cat colour to the pumpkin expression the customer wants.",
 	"Tip: Spend coins at the dog house to summon a Hell Hound for protection.",
-	"Tip: Long throws score more points — but only if they land!"
+	"Tip: Long throws score more points — but only if they land!",
+	"Tip: Customers move randomly — position yourself for a clear throw.",
+	"Tip: Pick up a pumpkin before heading to the cat to save time.",
+	"Tip: Only one hell dog can only be active a time — time it well.",
+	"Tip: Wrong orders can be the end of you — check the hat before throwing.",
+	"Tip: Pumpkins left on the ground can block your path in a tight spot.",
+	"Tip: Multiple patches mean multiple pumpkins — keep them all cycling.",
+	"Tip: Angry customers move faster when attacking — keep your distance."
 ]
+
+var _used_tip_indices: Array = []
+
+func _pick_tip() -> String:
+	if _used_tip_indices.size() >= TIPS.size():
+		_used_tip_indices.clear()
+	var available = []
+	for i in range(TIPS.size()):
+		if not _used_tip_indices.has(i):
+			available.append(i)
+	var chosen = available[randi() % available.size()]
+	_used_tip_indices.append(chosen)
+	return TIPS[chosen]
 
 const COST_BOOTS = 20
 const COST_TIME = 30
@@ -50,7 +70,7 @@ func setup(night_num: int) -> void:
 	_night_num = night_num
 	night_label.text = "Night  %d" % night_num
 	subtitle_label.text = SUBTITLES[night_num - 1]
-	tip_label.text = TIPS[night_num - 1]
+	tip_label.text = _pick_tip()
 
 	# Night 1 has no previous night stats — go straight to intro
 	if night_num == 1:
