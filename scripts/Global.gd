@@ -56,10 +56,10 @@ enum Difficulty {
 
 # Base ORDER_TIMEOUT_SEC per night (normal difficulty, 1 player)
 # Indexed by night (0 = night 1, 1 = night 2, 2 = night 3)
-const BASE_ORDER_TIMEOUT = [25, 20, 15]
+const BASE_ORDER_TIMEOUT = [25, 23, 21]
 
 # Base spawn interval in seconds per night (normal difficulty, 1 player)
-const BASE_SPAWN_INTERVAL = [10, 8, 6]
+const BASE_SPAWN_INTERVAL = [10, 9, 8]
 
 # Difficulty modifiers applied to timeouts and spawn intervals.
 # Timeout: higher = more generous. Spawn: higher = less frequent (easier).
@@ -76,6 +76,17 @@ const DIFFICULTY_SPAWN_MOD = {
 }
 
 var difficulty: Difficulty = Difficulty.NORMAL
+
+# Upgrades purchased in the between-night shop
+var upgrade_swift_boots: bool = false
+var upgrade_extra_time: bool = false
+var upgrade_fast_growth: bool = false
+
+# Player speed — modified by swift boots upgrade
+var player_speed: float = 130.0
+
+# Pumpkin grow interval in seconds — modified by fast growth upgrade
+var pumpkin_grow_interval: float = 2.5
 
 func get_night() -> int:
 	return night

@@ -19,6 +19,11 @@ func _reset_globals() -> void:
 	Enums.total_orders_completed = 0
 	Enums.total_orders_failed = 0
 	Enums.set_passed(false)
+	Enums.upgrade_swift_boots = false
+	Enums.upgrade_extra_time = false
+	Enums.upgrade_fast_growth = false
+	Enums.player_speed = 130.0
+	Enums.pumpkin_grow_interval = 2.5
 	get_tree().paused = false
 
 func _on_play_again_pressed() -> void:
