@@ -34,12 +34,15 @@ var dog = null
 var _urgent := false
 var _urgent_pulse_time := 0.0
 var pause_time = 0.0
+var _caught := false
 
 func add_pause_time(time: float):
 	pause_time = time
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if _caught:
+		return
 	
 	if _urgent && warn_indicator.visible:
 		_urgent_pulse_time += delta
@@ -66,15 +69,17 @@ func _process(delta: float) -> void:
 				play_sound.rpc(scream.get_path())
 				animation.modulate = Color(1, 0, 0, 0.8)
 				progress_bar.visible = false
-				#bubble_scene_instance.visible = false
 				speed = 100
 				diretion_timer.stop()
-				#set_collision_layer_value(1, false)
 				set_collision_mask_value(1, false)
 				attacking = true
 			else:
 				direction = global_position.direction_to(player.global_position)
 				play_directional_animation()
+				# Catch the player when close enough
+				if !_caught && global_position.distance_to(player.global_position) < 12.0:
+					_caught = true
+					player.ghost_caught.rpc(self.get_path())
 
 	if hit_by_order && hit_item != null:
 		rotation = hit_item.rotation
@@ -184,6 +189,10 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		remove_timer.start(2)
 		speed = 0
 		animation.rotation += deg_to_rad(90)
+
+	if body.name.contains("Player") && !attacking && !_caught:
+		player = body
+		retreat.rpc()
 	
 	if !hit_by_order && body.is_in_group("items"):
 		#var jack = body as RigidBody2D
@@ -280,3 +289,22 @@ func set_player(p: String):
 
 func is_attacking():
 	return attacking
+
+@rpc("any_peer", "call_local")
+func retreat() -> void:
+	if _caught:
+		return
+	_caught = true
+	if order_number > 0:
+		OrderManager.remove_order.rpc(order_number)
+	if player != null && player.has_method("select_next_order"):
+		player.select_next_order()
+	attacking = false
+	ordered = false
+	ray_cast_right.enabled = false
+	diretion_timer.stop()
+	speed = 0
+	animation.modulate = Color(1, 1, 1, 0.4)
+	var tween = create_tween()
+	tween.tween_property(animation, "modulate:a", 0.0, 0.8)
+	tween.tween_callback(func(): if is_instance_valid(self): queue_free())

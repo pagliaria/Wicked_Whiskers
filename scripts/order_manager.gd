@@ -49,7 +49,9 @@ func add_paused_time(time: float):
 		child.add_pause_time(time)
 
 	for i in orders:
-		orders[i].get_customer().add_pause_time(time)
+		var customer = orders[i].get_customer()
+		if customer != null:
+			customer.add_pause_time(time)
 		
 func get_display(order: int):
 	if order_display.has(order):

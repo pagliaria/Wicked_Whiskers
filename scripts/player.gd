@@ -212,6 +212,8 @@ func _physics_process(_delta: float) -> void:
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		return
 
+	_tick_stun(_delta)
+
 	if !dead:
 		if !throw_order && current_held_item != null:
 			if facingRight:
@@ -255,10 +257,52 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		current_cat_in_range = area.get_parent()
 
 	if area.name == "ghost_body":
-		dead = true
-		sprite.stop()
-		print("dead!")
-		death_timer.start(3)
+		if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+			return
+		ghost_caught.rpc(area.get_parent().get_path())
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.name.contains("customer") && body.has_method("is_attacking") && body.is_attacking():
+		if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+			return
+		ghost_caught.rpc(body.get_path())
+
+var _stunned: bool = false
+var _stun_timer: float = 0.0
+const STUN_DURATION: float = 2.0
+const COIN_PENALTY: int = 10
+
+@rpc("any_peer", "call_local")
+func ghost_caught(ghost_path: String) -> void:
+	if _stunned:
+		return
+	# Drop held item
+	if current_held_item != null:
+		var path = current_held_item.get_path()
+		change_mask.rpc(path, 1, true)
+		change_layer.rpc(path, 1, true)
+		change_mask.rpc(path, 10, false)
+		change_layer.rpc(path, 10, false)
+		current_held_item = null
+	# Deduct coins
+	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		Enums.coins = max(0, Enums.coins - COIN_PENALTY)
+	# Flash the sprite red briefly
+	_stunned = true
+	_stun_timer = STUN_DURATION
+	var tween = create_tween()
+	for _i in range(4):
+		tween.tween_property(sprite, "modulate", Color(1, 0.2, 0.2, 1), 0.15)
+		tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.15)
+	# Tell the ghost to retreat
+	if has_node(ghost_path):
+		get_node(ghost_path).retreat.rpc()
+
+func _tick_stun(delta: float) -> void:
+	if _stunned:
+		_stun_timer -= delta
+		if _stun_timer <= 0.0:
+			_stunned = false
 
 func display_restart():
 	var canvas := CanvasLayer.new()
