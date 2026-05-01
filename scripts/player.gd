@@ -284,9 +284,10 @@ func ghost_caught(ghost_path: String) -> void:
 		change_mask.rpc(path, 10, false)
 		change_layer.rpc(path, 10, false)
 		current_held_item = null
-	# Deduct coins
+	# Deduct coins and track
 	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		Enums.coins = max(0, Enums.coins - COIN_PENALTY)
+		Enums.total_times_caught += 1
 	# Flash the sprite red briefly
 	_stunned = true
 	_stun_timer = STUN_DURATION

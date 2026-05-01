@@ -17,6 +17,8 @@ var score_earned_this_night: int = 0
 # Cumulative totals across all nights
 var total_orders_completed: int = 0
 var total_orders_failed: int = 0
+var total_attacks_received: int = 0
+var total_times_caught: int = 0
 
 func reset_night_stats() -> void:
 	total_orders_completed += orders_completed

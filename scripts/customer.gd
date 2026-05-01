@@ -73,6 +73,8 @@ func _process(delta: float) -> void:
 				diretion_timer.stop()
 				set_collision_mask_value(1, false)
 				attacking = true
+				if is_multiplayer_authority():
+					Enums.total_attacks_received += 1
 			else:
 				direction = global_position.direction_to(player.global_position)
 				play_directional_animation()

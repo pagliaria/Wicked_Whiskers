@@ -6,12 +6,20 @@ func _compute_grade() -> Dictionary:
 	var total = Enums.total_orders_completed + Enums.total_orders_failed
 	var completion_ratio = float(Enums.total_orders_completed) / float(total) if total > 0 else 0.0
 
-	# Score thresholds tuned against BASE_ORDER_TIMEOUT and 3 nights of play
-	if completion_ratio >= 0.95 && Enums.score >= 1500:
+	# Apply penalty points for bad events
+	# Each attack that reached the player costs more than a missed order
+	# since it means an order already failed AND you got caught
+	var penalty = 0
+	penalty += Enums.total_orders_failed * 50
+	penalty += Enums.total_attacks_received * 30
+	penalty += Enums.total_times_caught * 75
+	var penalised_score = max(0, Enums.score - penalty)
+
+	if completion_ratio >= 0.95 && penalised_score >= 1200:
 		return { "grade": "S", "color": Color(1.0, 0.85, 0.2, 1.0) }   # gold
-	elif completion_ratio >= 0.85 && Enums.score >= 1000:
+	elif completion_ratio >= 0.85 && penalised_score >= 800:
 		return { "grade": "A", "color": Color(0.4, 0.9, 0.4, 1.0) }    # green
-	elif completion_ratio >= 0.70 && Enums.score >= 500:
+	elif completion_ratio >= 0.70 && penalised_score >= 400:
 		return { "grade": "B", "color": Color(0.4, 0.75, 1.0, 1.0) }   # blue
 	elif completion_ratio >= 0.50:
 		return { "grade": "C", "color": Color(0.92, 0.92, 0.92, 1.0) } # white
@@ -40,6 +48,8 @@ func _reset_globals() -> void:
 	Enums.orders_failed = 0
 	Enums.total_orders_completed = 0
 	Enums.total_orders_failed = 0
+	Enums.total_attacks_received = 0
+	Enums.total_times_caught = 0
 	Enums.set_passed(false)
 	Enums.upgrade_swift_boots = false
 	Enums.upgrade_extra_time = false
