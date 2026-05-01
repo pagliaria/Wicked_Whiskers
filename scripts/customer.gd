@@ -213,6 +213,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		animation.rotation += deg_to_rad(90)
 
 	if body.name.contains("Player") && !attacking && !_caught:
+		Enums.orders_failed += 1
 		player = body
 		retreat.rpc()
 	
@@ -310,9 +311,6 @@ func is_attacking():
 
 @rpc("any_peer", "call_local")
 func retreat() -> void:
-	if _caught:
-		return
-	_caught = true
 	if order_number > 0:
 		OrderManager.remove_order.rpc(order_number)
 	if player != null && player.has_method("select_next_order"):
