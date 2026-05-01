@@ -4,6 +4,9 @@ var speed = 30
 var rotation_modifier = 0
 var direction = Vector2(1, 0) # Start moving right
 const DIR_4 = [Vector2.LEFT,Vector2.UP,Vector2.RIGHT,Vector2.DOWN]
+const BASE_COINS = 5
+const BASE_POINTS = 100
+const MAX_DISTANCE = 400.0
 var animation: AnimatedSprite2D = null
 const COIN = preload("res://scenes/coin.tscn")
 @onready var ray_cast_right: RayCast2D = $RayCastRight
@@ -177,6 +180,23 @@ func play_directional_animation():
 func _on_ready() -> void:
 	animation = $ghost
 	animation.play("walk_right")
+
+func _calculate_throw_reward(data: Dictionary) -> Dictionary:
+	if data.is_empty():
+		return {"coins": BASE_COINS, "points": null, "time_ratio": null, "dist_bonus": null}
+
+	var time_ratio = clamp(1.0 - (data.elapsed / Enums.ORDER_TIMEOUT_SEC), 0.0, 1.0)
+	var dist = data.throw_pos.distance_to(global_position)
+	var dist_bonus = clamp(1.0 + (dist / MAX_DISTANCE), 1.0, 2.0)
+	var coins_awarded = max(1, int(BASE_COINS * time_ratio * dist_bonus))
+	var points_awarded = int(BASE_POINTS * time_ratio * dist_bonus)
+
+	return {
+		"coins": coins_awarded,
+		"points": points_awarded,
+		"time_ratio": time_ratio,
+		"dist_bonus": dist_bonus
+	}
 	
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.name.contains("hell_dog"):
@@ -212,23 +232,19 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				show_wrong_feedback.rpc()
 			else:
 				if is_multiplayer_authority():
-					var i = randi_range(3,10)
-					spawn_coins.rpc(i)
-					Enums.coins_earned_this_night += i
-					# Award score based on time remaining and throw distance
 					var player_node = body.get_player()
+					var reward = {"coins": BASE_COINS, "points": null, "time_ratio": null, "dist_bonus": null}
 					if player_node != null && player_node.has_method("consume_throw_score_data"):
 						var data = player_node.consume_throw_score_data()
-						if data.size() > 0:
-							const BASE_POINTS = 100
-							const MAX_DISTANCE = 400.0
-							var time_ratio = clamp(1.0 - (data.elapsed / Enums.ORDER_TIMEOUT_SEC), 0.0, 1.0)
-							var dist = data.throw_pos.distance_to(global_position)
-							var dist_bonus = clamp(1.0 + (dist / MAX_DISTANCE), 1.0, 2.0)
-							var points = int(BASE_POINTS * time_ratio * dist_bonus)
-							Enums.score += points
-							Enums.score_earned_this_night += points
-							print("Score +%d (time: %.2f, dist: %.2f) = %d" % [points, time_ratio, dist_bonus, Enums.score])
+						reward = _calculate_throw_reward(data)
+					spawn_coins.rpc(reward.coins)
+					Enums.coins_earned_this_night += reward.coins
+					if reward.points != null:
+						Enums.score += reward.points
+						Enums.score_earned_this_night += reward.points
+						print("Score +%d, Coins +%d (time: %.2f, dist: %.2f) = %d" % [reward.points, reward.coins, reward.time_ratio, reward.dist_bonus, Enums.score])
+					else:
+						print("Coins +%d (fallback reward, no throw data)" % reward.coins)
 				OrderManager.remove_order.rpc(order_number)
 				Enums.orders_completed += 1
 				var player_node = body.get_player()
