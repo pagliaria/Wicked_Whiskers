@@ -3,6 +3,8 @@ extends CharacterBody2D
 const SPEED = 130.0
 const THROW_SPEED = 300
 const SPIN_SPEED = 2000
+const GAME_OVER_MENU = preload("res://scenes/game_over_menu.tscn")
+const COIN_TEXTURE = preload("res://assets/sprites/coin.png")
 
 @onready var throw: AudioStreamPlayer2D = $throw
 @onready var squish: AudioStreamPlayer2D = $squish
@@ -27,6 +29,17 @@ var moving_string = "moving"
 
 # Controller order cycling
 var selected_order: int = 1
+var _throw_start_pos: Vector2 = Vector2.ZERO
+var _throw_order_time: float = 0.0
+var _throw_order_num: int = -1
+var default_sprite_position := Vector2.ZERO
+var default_sprite_scale := Vector2.ONE
+
+func _ready() -> void:
+	default_sprite_position = sprite.position
+	default_sprite_scale = sprite.scale
+	sprite.visible = false
+	sprite.stop()
 
 func _unhandled_input(event):
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -69,20 +82,16 @@ func _try_submit_order(num: int) -> void:
 	if order != null && current_held_item != null:
 		selected_order = num
 		target_node = order.get_customer()
+		# Capture throw info for scoring
+		_throw_start_pos = global_position
+		_throw_order_time = Time.get_unix_time_from_system() - order.get_order_time()
+		_throw_order_num = num
 		turn_in_order.rpc(current_held_item.get_path(), num)
 		print("have it!")
 		play_sound.rpc(throw.get_path())
 		current_held_item.set_player.rpc(self.get_path())
 		current_held_item.lock_rotation = false
 		throw_order = true
-		# Auto-select the most urgent remaining order after submitting
-		var remaining = OrderManager.orders.keys()
-		remaining.erase(num)
-		if remaining.is_empty():
-			OrderManager.highlight_order(-1)
-		else:
-			selected_order = OrderManager.get_most_urgent_order_number()
-			OrderManager.highlight_order(selected_order)
 
 func _handle_interact() -> void:
 	if current_cat_in_range != null && current_held_item != null && !current_held_item.name.contains("jack") && !current_cat_in_range.is_busy():
@@ -125,6 +134,24 @@ func _handle_interact() -> void:
 		change_layer.rpc(path, 10, false)
 		current_held_item = null
 
+func select_next_order():
+	# Auto-select the most urgent remaining order after submitting
+	# Pass the submitted number so urgency check excludes it (it's still
+	# in OrderManager.orders until the pumpkin physically hits the customer)
+	var next = OrderManager.get_most_urgent_order_number()
+	if next == -1:
+		OrderManager.highlight_order(-1)
+	else:
+		selected_order = next
+		OrderManager.highlight_order(selected_order)
+
+func consume_throw_score_data() -> Dictionary:
+	if _throw_order_num == -1:
+		return {}
+	var data = {"throw_pos": _throw_start_pos, "elapsed": _throw_order_time}
+	_throw_order_num = -1
+	return data
+
 func set_player_name(n: String):
 	player_name.text = n
 	if n.is_empty():
@@ -160,7 +187,7 @@ func get_input():
 
 	if !dead:
 		var input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-		velocity = input_direction * SPEED
+		velocity = input_direction * Enums.player_speed
 
 		if velocity.x > 0:
 			sprite.flip_h = false
@@ -184,6 +211,11 @@ func play_sprite(path, play, animation):
 
 func _physics_process(_delta: float) -> void:
 	if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		return
+
+	_tick_stun(_delta)
+
+	if _stunned:
 		return
 
 	if !dead:
@@ -229,13 +261,114 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		current_cat_in_range = area.get_parent()
 
 	if area.name == "ghost_body":
-		dead = true
-		sprite.stop()
-		print("dead!")
-		death_timer.start(3)
+		if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+			return
+		ghost_caught.rpc(area.get_parent().get_path())
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.name.contains("customer") && body.has_method("is_attacking") && body.is_attacking():
+		if multiplayer_synchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+			return
+		ghost_caught.rpc(body.get_path())
+
+var _stunned: bool = false
+var _stun_timer: float = 0.0
+const STUN_DURATION: float = 2.0
+const COIN_PENALTY: int = 10
+
+@rpc("any_peer", "call_local")
+func ghost_caught(ghost_path: String) -> void:
+	if _stunned:
+		return
+	# Drop held item
+	if current_held_item != null:
+		var path = current_held_item.get_path()
+		change_mask.rpc(path, 1, true)
+		change_layer.rpc(path, 1, true)
+		change_mask.rpc(path, 10, false)
+		change_layer.rpc(path, 10, false)
+		current_held_item = null
+	# Deduct coins and track
+	if multiplayer_synchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		Enums.coins = max(0, Enums.coins - COIN_PENALTY)
+		Enums.total_times_caught += 1
+		_spawn_coin_stolen_label()
+		_flash_coin_hud()
+	# Flash the sprite red briefly
+	_stunned = true
+	_stun_timer = STUN_DURATION
+	var tween = create_tween()
+	for _i in range(4):
+		tween.tween_property(sprite, "modulate", Color(1, 0.2, 0.2, 1), 0.15)
+		tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.15)
+	# Tell the ghost to retreat
+	if has_node(ghost_path):
+		get_node(ghost_path).retreat.rpc()
+
+func _spawn_coin_stolen_label() -> void:
+	var popup := HBoxContainer.new()
+	popup.z_index = 40
+	popup.top_level = true
+	popup.global_position = global_position + Vector2(-16, -30)
+	popup.modulate = Color(1, 1, 1, 1)
+	popup.scale = Vector2(0.7, 0.7)
+	popup.alignment = BoxContainer.ALIGNMENT_CENTER
+	popup.add_theme_constant_override("separation", 4)
+	get_tree().current_scene.add_child(popup)
+
+	var coin_atlas := AtlasTexture.new()
+	coin_atlas.atlas = COIN_TEXTURE
+	coin_atlas.region = Rect2(0, 0, 16, 16)
+
+	var icon := TextureRect.new()
+	icon.texture = coin_atlas
+	icon.custom_minimum_size = Vector2(16, 16)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	popup.add_child(icon)
+
+	var label := Label.new()
+	label.text = "-%d" % COIN_PENALTY
+	label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.25, 1.0))
+	label.add_theme_color_override("font_outline_color", Color(0.15, 0.0, 0.0, 1.0))
+	label.add_theme_constant_override("outline_size", 3)
+	label.add_theme_font_size_override("font_size", 10)
+	popup.add_child(label)
+
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(popup, "global_position", popup.global_position + Vector2(0, -22), 0.75)
+	tween.tween_property(popup, "modulate:a", 0.0, 0.75)
+	tween.tween_property(popup, "scale", Vector2.ONE, 0.2)
+	tween.chain().tween_callback(func(): if is_instance_valid(popup): popup.queue_free())
+
+func _flash_coin_hud() -> void:
+	var coins_label: Label = get_tree().current_scene.get_node_or_null("coins_amount")
+	if coins_label == null:
+		return
+
+	var original_color = coins_label.modulate
+	var original_scale = coins_label.scale
+	var tween = create_tween()
+	tween.tween_property(coins_label, "modulate", Color(1.0, 0.3, 0.25, 1.0), 0.1)
+	tween.parallel().tween_property(coins_label, "scale", original_scale * 1.25, 0.1)
+	tween.tween_property(coins_label, "modulate", original_color, 0.2)
+	tween.parallel().tween_property(coins_label, "scale", original_scale, 0.2)
+
+func _tick_stun(delta: float) -> void:
+	if _stunned:
+		_stun_timer -= delta
+		if _stun_timer <= 0.0:
+			_stunned = false
 
 func display_restart():
-	get_parent().get_node("restart").visible = true
+	var canvas := CanvasLayer.new()
+	canvas.layer = 30
+	get_tree().current_scene.add_child(canvas)
+
+	var game_over_menu = GAME_OVER_MENU.instantiate()
+	game_over_menu.canvas_layer = canvas
+	canvas.add_child(game_over_menu)
 
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.get_parent() == current_item_in_range:
@@ -261,6 +394,8 @@ func set_player_id(id):
 func set_char_select(c: Enums.CharSelection):
 	char_select = c
 	print("Char set to: ", c)
+	sprite.scale = default_sprite_scale
+	sprite.position = default_sprite_position
 
 	match char_select:
 		Enums.CharSelection.KNIGHT:
@@ -282,3 +417,6 @@ func set_char_select(c: Enums.CharSelection):
 			sprite.scale.x = .3
 			sprite.scale.y = .3
 			sprite.position.y = -10
+
+	sprite.visible = true
+	play_sprite.rpc(sprite.get_path(), true, idle_string)

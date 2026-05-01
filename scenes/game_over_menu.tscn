@@ -1,0 +1,117 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwefpa5xla1sq"]
+
+[ext_resource type="Script" uid="uid://twsi0xiuhs2c" path="res://scripts/game_over_menu.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_font"]
+[ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="3_theme"]
+
+[node name="game_over_menu" type="Control"]
+process_mode = 3
+z_index = 20
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -150.0
+offset_right = 240.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -132.0
+offset_top = 28.0
+offset_right = 132.0
+offset_bottom = 70.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.35, 0.25, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 28
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="Message" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -170.0
+offset_top = 86.0
+offset_right = 170.0
+offset_bottom = 122.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "The pumpkins will have to wait."
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -160.0
+offset_top = 180.0
+offset_right = 160.0
+offset_bottom = 220.0
+grow_horizontal = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RestartCenter" type="CenterContainer" parent="Panel/ButtonRow"]
+layout_mode = 2
+
+[node name="restart" type="Button" parent="Panel/ButtonRow/RestartCenter"]
+custom_minimum_size = Vector2(130, 40)
+layout_mode = 2
+focus_neighbor_left = NodePath("../../QuitCenter/quit")
+focus_neighbor_right = NodePath("../../QuitCenter/quit")
+focus_next = NodePath("../../QuitCenter/quit")
+focus_previous = NodePath("../../QuitCenter/quit")
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "RESTART"
+
+[node name="QuitCenter" type="CenterContainer" parent="Panel/ButtonRow"]
+layout_mode = 2
+
+[node name="quit" type="Button" parent="Panel/ButtonRow/QuitCenter"]
+custom_minimum_size = Vector2(130, 40)
+layout_mode = 2
+focus_neighbor_left = NodePath("../../RestartCenter/restart")
+focus_neighbor_right = NodePath("../../RestartCenter/restart")
+focus_next = NodePath("../../RestartCenter/restart")
+focus_previous = NodePath("../../RestartCenter/restart")
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "QUIT"
+
+[connection signal="pressed" from="Panel/ButtonRow/RestartCenter/restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="Panel/ButtonRow/QuitCenter/quit" to="." method="_on_quit_pressed"]

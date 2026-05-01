@@ -4,6 +4,9 @@ var speed = 30
 var rotation_modifier = 0
 var direction = Vector2(1, 0) # Start moving right
 const DIR_4 = [Vector2.LEFT,Vector2.UP,Vector2.RIGHT,Vector2.DOWN]
+const BASE_COINS = 5
+const BASE_POINTS = 100
+const MAX_DISTANCE = 400.0
 var animation: AnimatedSprite2D = null
 const COIN = preload("res://scenes/coin.tscn")
 @onready var ray_cast_right: RayCast2D = $RayCastRight
@@ -13,6 +16,8 @@ const COIN = preload("res://scenes/coin.tscn")
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var scream: AudioStreamPlayer2D = $scream
 @onready var order_bubble: Sprite2D = $order_bubble
+@onready var wrong_label: Label = $wrong_label
+@onready var warn_indicator: Label = $warn_indicator
 
 var problems = false
 var wrong_order = false
@@ -29,10 +34,23 @@ var hit_item: RigidBody2D = null
 var order_number = 0
 var order: Order = null
 var dog = null
+var _urgent := false
+var _urgent_pulse_time := 0.0
+var pause_time = 0.0
+var _caught := false
+
+func add_pause_time(time: float):
+	pause_time = time
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if _caught:
+		return
 	
+	if _urgent && warn_indicator.visible:
+		_urgent_pulse_time += delta
+		var t: float = (sin(_urgent_pulse_time * 4.0 * TAU) + 1.0) * 0.5
+		warn_indicator.modulate = Color(1.0, lerp(0.85, 0.3, t), lerp(0.2, 0.0, t), 1.0)
 	if !is_multiplayer_authority():
 		return
 	
@@ -42,26 +60,31 @@ func _process(_delta: float) -> void:
 		generateOrder()
 		
 	if ordered:
-		progress_bar.value = ((Time.get_unix_time_from_system() - order_time) / Enums.ORDER_TIMEOUT_SEC) * 100
+		progress_bar.value = ((Time.get_unix_time_from_system() - order_time - pause_time) / Enums.ORDER_TIMEOUT_SEC) * 100
 		#print("progress: ", progress_bar.value)
 		#bubble_scene_instance.global_position.x = global_position.x + 20
 		#bubble_scene_instance.global_position.y =global_position.y - 30
 		
 		if progress_bar.value >= 100 || wrong_order:
 			#problems!
+			warn_indicator.visible = false
 			if !attacking:
 				play_sound.rpc(scream.get_path())
 				animation.modulate = Color(1, 0, 0, 0.8)
 				progress_bar.visible = false
-				#bubble_scene_instance.visible = false
 				speed = 100
 				diretion_timer.stop()
-				#set_collision_layer_value(1, false)
 				set_collision_mask_value(1, false)
 				attacking = true
+				if is_multiplayer_authority():
+					Enums.total_attacks_received += 1
 			else:
 				direction = global_position.direction_to(player.global_position)
 				play_directional_animation()
+				# Catch the player when close enough
+				if !_caught && global_position.distance_to(player.global_position) < 12.0:
+					_caught = true
+					player.ghost_caught.rpc(self.get_path())
 
 	if hit_by_order && hit_item != null:
 		rotation = hit_item.rotation
@@ -129,7 +152,7 @@ func add_order(ht:Enums.HatType, it: Enums.OrderType, cust_path: String, time: f
 	order_bubble.set_type(order.get_order_type())
 	order_bubble.set_hat(order.get_order_hat())
 	ordered = true
-	progress_bar.visible = true
+	#progress_bar.visible = true
 
 func _on_timer_timeout() -> void:
 	direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
@@ -157,6 +180,23 @@ func play_directional_animation():
 func _on_ready() -> void:
 	animation = $ghost
 	animation.play("walk_right")
+
+func _calculate_throw_reward(data: Dictionary) -> Dictionary:
+	if data.is_empty():
+		return {"coins": BASE_COINS, "points": null, "time_ratio": null, "dist_bonus": null}
+
+	var time_ratio = clamp(1.0 - (data.elapsed / Enums.ORDER_TIMEOUT_SEC), 0.0, 1.0)
+	var dist = data.throw_pos.distance_to(global_position)
+	var dist_bonus = clamp(1.0 + (dist / MAX_DISTANCE), 1.0, 2.0)
+	var coins_awarded = max(1, int(BASE_COINS * time_ratio * dist_bonus))
+	var points_awarded = int(BASE_POINTS * time_ratio * dist_bonus)
+
+	return {
+		"coins": coins_awarded,
+		"points": points_awarded,
+		"time_ratio": time_ratio,
+		"dist_bonus": dist_bonus
+	}
 	
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.name.contains("hell_dog"):
@@ -167,9 +207,15 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		hit_by_order = true
 		order_bubble.visible = false
 		problems = false
+		set_urgent(false)
 		remove_timer.start(2)
 		speed = 0
 		animation.rotation += deg_to_rad(90)
+
+	if body.name.contains("Player") && !attacking && !_caught:
+		Enums.orders_failed += 1
+		player = body
+		retreat.rpc()
 	
 	if !hit_by_order && body.is_in_group("items"):
 		#var jack = body as RigidBody2D
@@ -184,15 +230,53 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				problems = true
 				#set_player.rpc(body.get_player().get_path())
 				player = body.get_player()
+				show_wrong_feedback.rpc()
 			else:
 				if is_multiplayer_authority():
-					var i = randi_range(3,10)
-					spawn_coins.rpc(i)
+					var player_node = body.get_player()
+					var reward = {"coins": BASE_COINS, "points": null, "time_ratio": null, "dist_bonus": null}
+					if player_node != null && player_node.has_method("consume_throw_score_data"):
+						var data = player_node.consume_throw_score_data()
+						reward = _calculate_throw_reward(data)
+					spawn_coins.rpc(reward.coins)
+					Enums.coins_earned_this_night += reward.coins
+					if reward.points != null:
+						Enums.score += reward.points
+						Enums.score_earned_this_night += reward.points
+						print("Score +%d, Coins +%d (time: %.2f, dist: %.2f) = %d" % [reward.points, reward.coins, reward.time_ratio, reward.dist_bonus, Enums.score])
+					else:
+						print("Coins +%d (fallback reward, no throw data)" % reward.coins)
 				OrderManager.remove_order.rpc(order_number)
+				Enums.orders_completed += 1
+				var player_node = body.get_player()
+				if player_node != null && player_node.has_method("select_next_order"):
+					var data = player_node.select_next_order()
 				hit_by_order = true
 				order_bubble.visible = false
 				problems = false
+				set_urgent(false)
 			remove_timer.start(1)
+
+@rpc("any_peer", "call_local")
+func show_wrong_feedback():
+	wrong_label.visible = true
+	var tween = create_tween()
+	var origin = wrong_label.position
+	const SHAKE_DIST = 4.0
+	const SHAKE_STEP = 0.04
+	for _i in range(6):
+		tween.tween_property(wrong_label, "position", origin + Vector2(SHAKE_DIST, 0), SHAKE_STEP)
+		tween.tween_property(wrong_label, "position", origin + Vector2(-SHAKE_DIST, 0), SHAKE_STEP)
+	tween.tween_property(wrong_label, "position", origin, SHAKE_STEP)
+	tween.tween_property(wrong_label, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(func(): wrong_label.visible = false; wrong_label.modulate.a = 1.0)
+
+func set_urgent(active: bool) -> void:
+	_urgent = active
+	_urgent_pulse_time = 0.0
+	warn_indicator.visible = active
+	if active:
+		warn_indicator.modulate = Color(1.0, 0.85, 0.2, 1.0)
 
 @rpc("any_peer","call_local")
 func play_sound(node):
@@ -213,6 +297,7 @@ func _on_remove_timer_timeout() -> void:
 		hit_item.queue_free()
 	if problems:
 		wrong_order = true
+		Enums.orders_failed += 1
 	else:
 		if is_multiplayer_authority():
 			queue_free()
@@ -223,3 +308,19 @@ func set_player(p: String):
 
 func is_attacking():
 	return attacking
+
+@rpc("any_peer", "call_local")
+func retreat() -> void:
+	if order_number > 0:
+		OrderManager.remove_order.rpc(order_number)
+	if player != null && player.has_method("select_next_order"):
+		player.select_next_order()
+	attacking = false
+	ordered = false
+	ray_cast_right.enabled = false
+	diretion_timer.stop()
+	speed = 0
+	animation.modulate = Color(1, 1, 1, 0.4)
+	var tween = create_tween()
+	tween.tween_property(animation, "modulate:a", 0.0, 0.8)
+	tween.tween_callback(func(): if is_instance_valid(self): queue_free())

@@ -12,7 +12,9 @@ func _init(hat: Enums.HatType, item: Enums.OrderType, customer: CharacterBody2D,
 	order_time = time
 	
 func get_customer() -> CharacterBody2D:
-	return order_customer_node
+	if is_instance_valid(order_customer_node):
+		return order_customer_node
+	return null
 
 func get_order_time() -> float:
 	return order_time

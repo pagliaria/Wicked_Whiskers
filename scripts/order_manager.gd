@@ -2,6 +2,7 @@ extends Node
 
 var orders = {}
 var order_display = {}
+var paused_time = 0
 
 @onready var orders_display: HBoxContainer = null
 const ORDER_SCENE = preload("res://scenes/order.tscn")
@@ -41,6 +42,17 @@ func get_order(order: int) -> Order:
 	else:
 		return null
 
+func add_paused_time(time: float):
+	paused_time = time
+	var children = orders_display.get_children()
+	for child in children:
+		child.add_pause_time(time)
+
+	for i in orders:
+		var customer = orders[i].get_customer()
+		if customer != null:
+			customer.add_pause_time(time)
+		
 func get_display(order: int):
 	if order_display.has(order):
 		return order_display[order]
@@ -49,10 +61,17 @@ func get_display(order: int):
 # Returns the order number with the least time remaining.
 # Ties broken by lowest order number (leftmost in the display).
 func get_most_urgent_order_number() -> int:
+	return get_most_urgent_order_number_excluding(-1)
+
+# Same as above but skips `exclude` — use when an order has been thrown
+# but not yet removed from the dict (pumpkin still in flight).
+func get_most_urgent_order_number_excluding(exclude: int) -> int:
 	var best_num = -1
 	var best_remaining = INF
 	for num in orders:
-		var remaining = Enums.ORDER_TIMEOUT_SEC - (Time.get_unix_time_from_system() - orders[num].get_order_time())
+		if num == exclude:
+			continue
+		var remaining = (Enums.ORDER_TIMEOUT_SEC + paused_time) - (Time.get_unix_time_from_system() - orders[num].get_order_time())
 		if remaining < best_remaining:
 			best_remaining = remaining
 			best_num = num

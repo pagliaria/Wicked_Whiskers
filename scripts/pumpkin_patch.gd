@@ -14,6 +14,9 @@ enum GrowState {
 
 var grow_state = GrowState.SEED
 
+func _ready() -> void:
+	grow.wait_time = Enums.pumpkin_grow_interval
+
 func _on_grow_timeout() -> void:
 	#grow_pumpkin.rpc()
 	grow_pumpkin()

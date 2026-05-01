@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://ca0i1oa70m5ki"]
+[gd_scene load_steps=47 format=3 uid="uid://ca0i1oa70m5ki"]
 
 [ext_resource type="Script" uid="uid://dglcspbyyrvwh" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://dyaxfw0dpj4fc" path="res://scenes/player.tscn" id="1_uwrxv"]
@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://7i4unig5mxbi" path="res://assets/sprites/tilesets/32x32_map_tile v3.1 [MARGINLESS].png" id="4_vtaks"]
 [ext_resource type="Texture2D" uid="uid://lgnd2lm14l1" path="res://assets/sprites/tilesets/Tiles-and-Enemies.png" id="5_kvpfn"]
 [ext_resource type="Texture2D" uid="uid://b4hmss1xkylhr" path="res://assets/sprites/tilesets/graveyard.png" id="6_ir15t"]
-[ext_resource type="AudioStream" uid="uid://vgbut1k478k2" path="res://assets/music/time_for_adventure.mp3" id="6_p57ef"]
 [ext_resource type="Texture2D" uid="uid://hfngqdfy2fib" path="res://assets/sprites/tilesets/Prison_C.png" id="7_ca42v"]
 [ext_resource type="PackedScene" uid="uid://xvxro4ui6fv5" path="res://scenes/pumpkin_patch.tscn" id="8_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://3rabkoyhrrx5" path="res://scenes/orders.tscn" id="8_gee14"]
@@ -21,10 +20,13 @@
 [ext_resource type="Texture2D" uid="uid://ctfy6siily1lh" path="res://assets/Tiles/Slice 23.png" id="16_5newe"]
 [ext_resource type="PackedScene" uid="uid://c5ikwbxtyioto" path="res://scenes/witch_hat_table.tscn" id="19_1kice"]
 [ext_resource type="PackedScene" uid="uid://b2turaxy54f0f" path="res://scenes/cap_table.tscn" id="19_bt5mj"]
+[ext_resource type="AudioStream" uid="uid://dvdueo8j7q4hw" path="res://assets/music/spooky_tune.mp3" id="19_qnb83"]
 [ext_resource type="PackedScene" uid="uid://bpnelqrhs3f7h" path="res://scenes/cowboy_table.tscn" id="20_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://bg78n2u0rl72p" path="res://scenes/sombraro_table.tscn" id="21_pl11u"]
 [ext_resource type="PackedScene" uid="uid://d1d7ksox31ymj" path="res://scenes/dog_house.tscn" id="24_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://lbykn7w2lgbx" path="res://scenes/hell_dog.tscn" id="25_pl11u"]
+[ext_resource type="PackedScene" uid="uid://dc4qfddm3aaia" path="res://scenes/night_intro.tscn" id="26_nightintro"]
+[ext_resource type="PackedScene" uid="uid://c1hlpedy4n4ep" path="res://scenes/win_screen.tscn" id="27_winscreen"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -5186,6 +5188,13 @@ sources/9 = SubResource("TileSetAtlasSource_e1j6l")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u5sy4"]
 size = Vector2(20, 79)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(0, 0, 0, 0.55)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1kice"]
 corner_radius_top_left = 5
 corner_radius_top_right = 5
@@ -5227,6 +5236,11 @@ player_scene = ExtResource("1_uwrxv")
 customer = ExtResource("2_u5sy4")
 cat = ExtResource("4_lbhrr")
 patch = ExtResource("8_0tnpc")
+night_intro_scene = ExtResource("26_nightintro")
+win_screen_scene = ExtResource("27_winscreen")
+
+[node name="night_modulate" type="CanvasModulate" parent="."]
+color = Color(1, 0.85098, 0.6, 1)
 
 [node name="pause_handler" parent="." instance=ExtResource("3_dinhu")]
 
@@ -5265,7 +5279,7 @@ position = Vector2(148, 37)
 metadata/Type = "surprised"
 
 [node name="music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_p57ef")
+stream = ExtResource("19_qnb83")
 volume_db = -15.0
 autoplay = true
 parameters/looping = true
@@ -5297,6 +5311,7 @@ position = Vector2(-301, 65)
 shape = SubResource("RectangleShape2D_u5sy4")
 
 [node name="orders" parent="." instance=ExtResource("8_gee14")]
+z_index = 5
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -5313,15 +5328,13 @@ visible = false
 position = Vector2(146, 86)
 scale = Vector2(0.0661982, 0.0661982)
 
-[node name="restart" type="Label" parent="."]
-visible = false
-z_index = 10
-offset_left = -80.0
-offset_top = 140.0
-offset_right = 178.0
-offset_bottom = 162.333
-theme_override_fonts/font = ExtResource("9_0tnpc")
-text = "Press R to restart"
+[node name="hud_bg" type="Panel" parent="."]
+z_index = 9
+offset_left = 268.0
+offset_top = -129.0
+offset_right = 360.0
+offset_bottom = -74.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
 
 [node name="night" type="Label" parent="."]
 z_index = 10
@@ -5355,6 +5368,31 @@ offset_left = 320.0
 offset_top = -103.0
 offset_right = 356.0
 offset_bottom = -90.0
+theme_override_fonts/font = ExtResource("9_0tnpc")
+theme_override_font_sizes/font_size = 8
+text = "0"
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="score_label" type="Label" parent="."]
+z_index = 10
+offset_left = 271.0
+offset_top = -90.0
+offset_right = 322.0
+offset_bottom = -77.0
+theme_override_fonts/font = ExtResource("9_0tnpc")
+theme_override_font_sizes/font_size = 8
+text = "Score:"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="score_amount" type="Label" parent="."]
+z_index = 10
+offset_left = 320.0
+offset_top = -90.0
+offset_right = 356.0
+offset_bottom = -77.0
 theme_override_fonts/font = ExtResource("9_0tnpc")
 theme_override_font_sizes/font_size = 8
 text = "0"

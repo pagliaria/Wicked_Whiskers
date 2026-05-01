@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://30qc81oxrfv3"]
+[gd_scene load_steps=9 format=3 uid="uid://30qc81oxrfv3"]
 
 [ext_resource type="Script" uid="uid://bs2526osu8yht" path="res://scripts/order_display.gd" id="1_2k6rg"]
 [ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_somo4"]
@@ -18,12 +18,6 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2k6rg"]
-bg_color = Color(0.180141, 0.721221, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wsyb0"]
-bg_color = Color(0.977949, 0.230255, 0.769886, 1)
 
 [node name="order_display" type="Control"]
 layout_mode = 3
@@ -78,9 +72,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 56.0
+offset_left = 60.0
 offset_top = 24.0
-offset_right = -18.0
+offset_right = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_2k6rg")
@@ -93,9 +87,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 54.0
+offset_left = 58.0
 offset_top = 18.0
-offset_right = -16.0
+offset_right = -12.0
 offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -109,9 +103,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 54.0
+offset_left = 58.0
 offset_top = 18.0
-offset_right = -16.0
+offset_right = -12.0
 offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -119,36 +113,28 @@ texture = ExtResource("5_wy35d")
 expand_mode = 1
 
 [node name="TextureRect2" type="Sprite2D" parent="Panel"]
-position = Vector2(34, 34)
+position = Vector2(30, 34)
 scale = Vector2(0.675781, 0.675781)
 texture = ExtResource("3_somo4")
 region_enabled = true
 region_rect = Rect2(76.4729, 2.24098, 34.3519, 55.1327)
 
-[node name="ProgressBar" type="ProgressBar" parent="Panel"]
-custom_minimum_size = Vector2(2, 0)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.191
-anchor_right = 0.827
-anchor_bottom = 0.057
-offset_left = -0.0100021
-offset_right = 0.0299988
-offset_bottom = -0.0210001
-grow_horizontal = 2
-theme_override_constants/outline_size = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_2k6rg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_wsyb0")
-rounded = true
-fill_mode = 1
-show_percentage = false
+[node name="patience_icon" type="TextureRect" parent="Panel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 38.0
+offset_right = 58.0
+offset_bottom = 56.0
+texture = ExtResource("2_2k6rg")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="hat_image" type="TextureRect" parent="Panel"]
 visible = false
 layout_mode = 0
-offset_left = 56.0
+offset_left = 60.0
 offset_top = 12.0
-offset_right = 82.0
+offset_right = 86.0
 offset_bottom = 37.0
 texture = ExtResource("7_82rgs")
 expand_mode = 1

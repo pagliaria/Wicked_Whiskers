@@ -1,0 +1,410 @@
+[gd_scene load_steps=7 format=3 uid="uid://dc4qfddm3aaia"]
+
+[ext_resource type="Script" uid="uid://b7celook8ncgs" path="res://scripts/night_intro.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://b8h3xbkd7ubfc" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_font"]
+[ext_resource type="Theme" uid="uid://dwsy8cf7lwcjg" path="res://themes/buttons.tres" id="3_theme"]
+
+[sub_resource type="Animation" id="Animation_fadein"]
+resource_name = "fade_in"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_fadeout"]
+resource_name = "fade_out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1"]
+_data = {
+&"fade_in": SubResource("Animation_fadein"),
+&"fade_out": SubResource("Animation_fadeout")
+}
+
+[node name="NightIntro" type="Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.02, 0.08, 0.92)
+
+[node name="StatsPanel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="StatsPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -180.0
+offset_right = 220.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="NightLabel" type="Label" parent="StatsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 40
+text = "Night 1 Complete!"
+horizontal_alignment = 1
+
+[node name="Divider" type="HSeparator" parent="StatsPanel/VBox"]
+layout_mode = 2
+
+[node name="StatsGrid" type="GridContainer" parent="StatsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="CompletedKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Orders Completed"
+
+[node name="CompletedVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.4, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="FailedKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Orders Failed"
+
+[node name="FailedVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.35, 0.35, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="CoinsKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Coins Earned"
+
+[node name="CoinsVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="ScoreKey" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "Score"
+
+[node name="ScoreVal" type="Label" parent="StatsPanel/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="ContinueCenter" type="CenterContainer" parent="StatsPanel/VBox"]
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="StatsPanel/VBox/ContinueCenter"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "NEXT NIGHT"
+
+[node name="ShopPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ShopPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -220.0
+offset_right = 260.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="ShopTitle" type="Label" parent="ShopPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 36
+text = "Shop"
+horizontal_alignment = 1
+
+[node name="CoinsRow" type="HBoxContainer" parent="ShopPanel/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="CoinsIcon" type="Label" parent="ShopPanel/VBox/CoinsRow"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "Coins: "
+
+[node name="ShopCoinsVal" type="Label" parent="ShopPanel/VBox/CoinsRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "0"
+
+[node name="Divider2" type="HSeparator" parent="ShopPanel/VBox"]
+layout_mode = 2
+
+[node name="Items" type="VBoxContainer" parent="ShopPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BootsRow" type="HBoxContainer" parent="ShopPanel/VBox/Items"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BootsLabel" type="Label" parent="ShopPanel/VBox/Items/BootsRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "Swift Boots"
+
+[node name="BootsStatus" type="Label" parent="ShopPanel/VBox/Items/BootsRow"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "+20 move speed"
+
+[node name="BootsButton" type="Button" parent="ShopPanel/VBox/Items/BootsRow"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Buy  (20 coins)"
+
+[node name="TimeRow" type="HBoxContainer" parent="ShopPanel/VBox/Items"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TimeLabel" type="Label" parent="ShopPanel/VBox/Items/TimeRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "Extra Time"
+
+[node name="TimeStatus" type="Label" parent="ShopPanel/VBox/Items/TimeRow"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "+5 sec order timeout"
+
+[node name="TimeButton" type="Button" parent="ShopPanel/VBox/Items/TimeRow"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Buy  (30 coins)"
+
+[node name="GrowthRow" type="HBoxContainer" parent="ShopPanel/VBox/Items"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="GrowthLabel" type="Label" parent="ShopPanel/VBox/Items/GrowthRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "Fast Growth"
+
+[node name="GrowthStatus" type="Label" parent="ShopPanel/VBox/Items/GrowthRow"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "Faster pumpkin patches"
+
+[node name="GrowthButton" type="Button" parent="ShopPanel/VBox/Items/GrowthRow"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 13
+text = "Buy  (25 coins)"
+
+[node name="Spacer" type="Control" parent="ShopPanel/VBox"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="ShopContinueCenter" type="CenterContainer" parent="ShopPanel/VBox"]
+layout_mode = 2
+
+[node name="ShopContinueButton" type="Button" parent="ShopPanel/VBox/ShopContinueCenter"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "CONTINUE"
+
+[node name="IntroPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="IntroPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="NightLabel" type="Label" parent="IntroPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 52
+text = "Night 1"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="IntroPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="IntroPanel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TipLabel" type="Label" parent="IntroPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer2" type="Control" parent="IntroPanel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BeginCenter" type="CenterContainer" parent="IntroPanel/VBox"]
+layout_mode = 2
+
+[node name="BeginButton" type="Button" parent="IntroPanel/VBox/BeginCenter"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+text = "BEGIN NIGHT"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_1")
+}
+
+[connection signal="pressed" from="StatsPanel/VBox/ContinueCenter/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="ShopPanel/VBox/ShopContinueCenter/ShopContinueButton" to="." method="_on_shop_continue_pressed"]
+[connection signal="pressed" from="ShopPanel/VBox/Items/BootsRow/BootsButton" to="." method="_on_boots_pressed"]
+[connection signal="pressed" from="ShopPanel/VBox/Items/TimeRow/TimeButton" to="." method="_on_time_pressed"]
+[connection signal="pressed" from="ShopPanel/VBox/Items/GrowthRow/GrowthButton" to="." method="_on_growth_pressed"]
+[connection signal="pressed" from="IntroPanel/VBox/BeginCenter/BeginButton" to="." method="_on_begin_pressed"]
