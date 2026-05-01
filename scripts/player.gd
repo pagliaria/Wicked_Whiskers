@@ -215,6 +215,9 @@ func _physics_process(_delta: float) -> void:
 
 	_tick_stun(_delta)
 
+	if _stunned:
+		return
+
 	if !dead:
 		if !throw_order && current_held_item != null:
 			if facingRight:
